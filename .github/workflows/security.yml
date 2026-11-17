@@ -1,0 +1,46 @@
+name: Security & Quality
+
+# The jobs are shared workflows in padamson/rust-ci-workflows. Each check
+# reports as `<job id here> / <job name there>`, the names branch
+# protection requires (`scripts/github-settings.sh`).
+#
+# A job only this repo needs goes here beside the calls. If one ever needs
+# a tool built from a git branch (a fork, or a producer's `main` you are
+# dogfooding), resolve the branch to a SHA in one step and install by
+# `--rev` in the next. Never `--branch`: the branch can move between the
+# resolve and the build, and the cargo cache then holds a binary nobody can
+# trace to a commit. `--locked` keeps the tool's own lockfile, `--force`
+# replaces a cached binary.
+#
+#   - name: Resolve tool revision
+#     id: tool
+#     run: echo "rev=$(git ls-remote https://github.com/OWNER/TOOL.git refs/heads/main | cut -f1)" >> "$GITHUB_OUTPUT"
+#   - name: Install tool
+#     run: cargo install --locked --force --git https://github.com/OWNER/TOOL.git --rev ${{ steps.tool.outputs.rev }} TOOL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly Saturday 5am ET
+    - cron: '0 9 * * 6'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  supply-chain:
+    uses: padamson/rust-ci-workflows/.github/workflows/supply-chain.yml@bc82a9327da289a29ae5f0c32b0cd94786e0d1f9 # v0.1.0
+
+  semver-preview:
+    uses: padamson/rust-ci-workflows/.github/workflows/semver-preview.yml@bc82a9327da289a29ae5f0c32b0cd94786e0d1f9 # v0.1.0
+
+  # The full sweep outgrows a job's timeout, so the schedule skips it. CI
+  # does not run `scripts/mutants.sh`: its pre-setup stubs go in `with:
+  # setup:` here.
+  mutation:
+    if: github.event_name != 'schedule'
+    uses: padamson/rust-ci-workflows/.github/workflows/mutation.yml@bc82a9327da289a29ae5f0c32b0cd94786e0d1f9 # v0.1.0
