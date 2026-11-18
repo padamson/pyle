@@ -54,14 +54,43 @@ jobs:
       - name: Install MSRV toolchain
         uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # master
         with:
-          toolchain: "1.88"
+          toolchain: "1.95"
 
       # If your crate uses `include_bytes!` against build-generated
       # artifacts (wasm pkgs, codegen output, etc.), stub them with
       # `touch` here so `cargo check` succeeds — the bytes aren't
       # exercised at compile time, only their existence on disk is.
+      # `--all-features` so the `stories` feature's theoria, which sets
+      # the MSRV, is checked too.
       - name: Check compilation on MSRV
-        run: cargo check --workspace
+        run: cargo check --workspace --all-features
+
+  wasm:
+    name: Build for wasm32
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Sites build pyle for the browser under Leptos's csr feature, which
+    # the native jobs never compile.
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # master
+        with:
+          toolchain: stable
+          targets: wasm32-unknown-unknown
+
+      - name: Cache Cargo
+        uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2
+        with:
+          shared-key: wasm
+
+      - name: Build the library for wasm32
+        run: cargo build --lib --target wasm32-unknown-unknown --features csr --locked
+
+      # The theoria gallery builds the stories for the browser too.
+      - name: Build the library and its stories for wasm32
+        run: cargo build --lib --target wasm32-unknown-unknown --features csr,stories --locked
 
   lint:
     name: Lint

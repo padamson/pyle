@@ -74,6 +74,7 @@ required_checks() {
     "Test on ubuntu-latest" \
     "Test on macos-latest" \
     "Test on windows-latest" \
+    "Build for wasm32" \
     "supply-chain / License & Dependency Check" \
     "supply-chain / Supply Chain Review" \
     "mutation / Mutation Testing (diff)"

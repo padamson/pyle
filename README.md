@@ -38,7 +38,7 @@ See [CLAUDE.md](CLAUDE.md) for development commands.
 
 ### Prerequisites
 
-- [Rust toolchain](https://rustup.rs/) (MSRV: 1.88)
+- [Rust toolchain](https://rustup.rs/) (MSRV: 1.95)
 - [prek](https://github.com/j178/prek) for pre-commit hooks: `cargo install prek && prek install --overwrite`
 
 ### Build and test

@@ -101,6 +101,7 @@ classic omission) means a bump merges with that job red.
 - `MSRV Check` — cheap; catches accidental use of post-MSRV features
 - `Lint` — fmt, clippy, doctest, cargo doc (ubuntu-only)
 - `Test on ubuntu-latest`, `Test on macos-latest`, `Test on windows-latest`
+- `Build for wasm32` — the library under Leptos's `csr` feature, as sites build it
 - `supply-chain / License & Dependency Check`, `supply-chain / Supply Chain Review`
 - `mutation / Mutation Testing (diff)`, `Skill version guard`
 

@@ -2,7 +2,7 @@
 name = "pyle"
 version = "0.1.0"
 edition = "2024"
-rust-version = "1.88"
+rust-version = "1.95"
 license = "MIT OR Apache-2.0"
 description = "Shared landing-page components for Leptos sites"
 repository = "https://github.com/padamson/pyle"
@@ -24,7 +24,22 @@ unsafe_code = "deny"
 [lints.clippy]
 
 [dependencies]
+# A library must not turn on a Leptos runtime (csr, ssr, hydrate); the site
+# picks one through the passthrough features below.
+leptos = { version = "0.8", default-features = false }
+# Only for the colocated `*.stories.rs` files (the `stories` feature),
+# never in a site's build.
+theoria = { git = "https://github.com/padamson/theoria", branch = "main", optional = true }
 
 [dev-dependencies]
+# Renders a component to its SSR HTML in a plain test.
+leptotes = { git = "https://github.com/padamson/leptotes", branch = "main" }
 # Scratch directories for the integration-test fixture in tests/common.
 tempfile = "3"
+
+[features]
+csr = ["leptos/csr", "theoria?/csr"]
+ssr = ["leptos/ssr", "theoria?/ssr"]
+hydrate = ["leptos/hydrate", "theoria?/hydrate"]
+# Compiles the component stories for the theoria gallery.
+stories = ["dep:theoria"]
