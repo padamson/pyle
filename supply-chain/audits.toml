@@ -1,0 +1,634 @@
+
+# cargo-vet audits file
+
+[audits]
+
+[[trusted.aho-corasick]]
+criteria = "safe-to-deploy"
+user-id = 189 # Andrew Gallant (BurntSushi)
+start = "2019-03-28"
+end = "2027-11-17"
+
+[[trusted.anyhow]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-10-05"
+end = "2027-11-17"
+
+[[trusted.async-lock]]
+criteria = "safe-to-deploy"
+user-id = 33035 # Taiki Endo (taiki-e)
+start = "2021-04-16"
+end = "2027-11-17"
+
+[[trusted.async-trait]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-07-23"
+end = "2027-11-17"
+
+[[trusted.bytes]]
+criteria = "safe-to-deploy"
+user-id = 6741 # Alice Ryhl (Darksonn)
+start = "2021-01-11"
+end = "2027-11-17"
+
+[[trusted.cfg-if]]
+criteria = "safe-to-deploy"
+user-id = 1
+start = "2019-03-04"
+end = "2027-11-17"
+
+[[trusted.cfg-if]]
+criteria = "safe-to-deploy"
+user-id = 55123 # rust-lang-owner
+start = "2025-06-09"
+end = "2027-11-17"
+
+[[trusted.config]]
+criteria = "safe-to-deploy"
+user-id = 6743 # Ed Page (epage)
+start = "2024-10-23"
+end = "2027-11-17"
+
+[[trusted.displaydoc]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2024-06-20"
+end = "2027-11-17"
+
+[[trusted.either]]
+criteria = "safe-to-deploy"
+user-id = 539 # Josh Stone (cuviper)
+start = "2019-04-02"
+end = "2027-11-17"
+
+[[trusted.equivalent]]
+criteria = "safe-to-deploy"
+user-id = 539 # Josh Stone (cuviper)
+start = "2023-02-05"
+end = "2027-11-17"
+
+[[trusted.event-listener]]
+criteria = "safe-to-deploy"
+user-id = 33035 # Taiki Endo (taiki-e)
+start = "2022-01-22"
+end = "2027-11-17"
+
+[[trusted.event-listener-strategy]]
+criteria = "safe-to-deploy"
+user-id = 33035 # Taiki Endo (taiki-e)
+start = "2025-03-27"
+end = "2027-11-17"
+
+[[trusted.fastrand]]
+criteria = "safe-to-deploy"
+user-id = 33035 # Taiki Endo (taiki-e)
+start = "2021-04-24"
+end = "2027-11-17"
+
+[[trusted.futures-task]]
+criteria = "safe-to-deploy"
+user-id = 33035 # Taiki Endo (taiki-e)
+start = "2019-07-29"
+end = "2027-11-17"
+
+[[trusted.futures-util]]
+criteria = "safe-to-deploy"
+user-id = 33035 # Taiki Endo (taiki-e)
+start = "2020-10-05"
+end = "2027-11-17"
+
+[[trusted.hashbrown]]
+criteria = "safe-to-deploy"
+user-id = 2915 # Amanieu d'Antras (Amanieu)
+start = "2019-04-02"
+end = "2027-11-17"
+
+[[trusted.http]]
+criteria = "safe-to-deploy"
+user-id = 359 # Sean McArthur (seanmonstar)
+start = "2019-04-05"
+end = "2027-11-17"
+
+[[trusted.icu_collections]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2022-09-27"
+end = "2027-11-17"
+
+[[trusted.icu_collections]]
+criteria = "safe-to-deploy"
+user-id = 166196 # Robert Bastian (robertbastian)
+start = "2023-01-26"
+end = "2027-11-17"
+
+[[trusted.icu_locale_core]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2025-02-26"
+end = "2027-11-17"
+
+[[trusted.icu_locale_core]]
+criteria = "safe-to-deploy"
+user-id = 166196 # Robert Bastian (robertbastian)
+start = "2025-05-07"
+end = "2027-11-17"
+
+[[trusted.icu_normalizer]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2021-04-29"
+end = "2027-11-17"
+
+[[trusted.icu_normalizer]]
+criteria = "safe-to-deploy"
+user-id = 166196 # Robert Bastian (robertbastian)
+start = "2023-01-26"
+end = "2027-11-17"
+
+[[trusted.icu_normalizer_data]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2023-10-03"
+end = "2027-11-17"
+
+[[trusted.icu_normalizer_data]]
+criteria = "safe-to-deploy"
+user-id = 166196 # Robert Bastian (robertbastian)
+start = "2023-11-16"
+end = "2027-11-17"
+
+[[trusted.icu_properties]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2022-01-31"
+end = "2027-11-17"
+
+[[trusted.icu_properties]]
+criteria = "safe-to-deploy"
+user-id = 166196 # Robert Bastian (robertbastian)
+start = "2023-01-26"
+end = "2027-11-17"
+
+[[trusted.icu_properties_data]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2023-10-03"
+end = "2027-11-17"
+
+[[trusted.icu_properties_data]]
+criteria = "safe-to-deploy"
+user-id = 166196 # Robert Bastian (robertbastian)
+start = "2023-11-16"
+end = "2027-11-17"
+
+[[trusted.icu_provider]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2022-01-31"
+end = "2027-11-17"
+
+[[trusted.icu_provider]]
+criteria = "safe-to-deploy"
+user-id = 166196 # Robert Bastian (robertbastian)
+start = "2022-10-08"
+end = "2027-11-17"
+
+[[trusted.indexmap]]
+criteria = "safe-to-deploy"
+user-id = 539 # Josh Stone (cuviper)
+start = "2020-01-15"
+end = "2027-11-17"
+
+[[trusted.inventory]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-08-15"
+end = "2027-11-17"
+
+[[trusted.itoa]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-05-02"
+end = "2027-11-17"
+
+[[trusted.js-sys]]
+criteria = "safe-to-deploy"
+user-id = 1
+start = "2019-03-04"
+end = "2027-11-17"
+
+[[trusted.libc]]
+criteria = "safe-to-deploy"
+user-id = 1
+start = "2019-03-29"
+end = "2027-11-17"
+
+[[trusted.libc]]
+criteria = "safe-to-deploy"
+user-id = 2915 # Amanieu d'Antras (Amanieu)
+start = "2021-01-27"
+end = "2027-11-17"
+
+[[trusted.libc]]
+criteria = "safe-to-deploy"
+user-id = 55123 # rust-lang-owner
+start = "2024-08-15"
+end = "2027-11-17"
+
+[[trusted.linux-raw-sys]]
+criteria = "safe-to-deploy"
+user-id = 6825 # Dan Gohman (sunfishcode)
+start = "2021-06-12"
+end = "2027-11-17"
+
+[[trusted.litemap]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2021-02-23"
+end = "2027-11-17"
+
+[[trusted.litemap]]
+criteria = "safe-to-deploy"
+user-id = 166196 # Robert Bastian (robertbastian)
+start = "2023-01-26"
+end = "2027-11-17"
+
+[[trusted.memchr]]
+criteria = "safe-to-deploy"
+user-id = 189 # Andrew Gallant (BurntSushi)
+start = "2019-07-07"
+end = "2027-11-17"
+
+[[trusted.paste]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-03-19"
+end = "2027-11-17"
+
+[[trusted.pathdiff]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2020-04-20"
+end = "2027-11-17"
+
+[[trusted.pin-project]]
+criteria = "safe-to-deploy"
+user-id = 33035 # Taiki Endo (taiki-e)
+start = "2019-03-02"
+end = "2027-11-17"
+
+[[trusted.pin-project-internal]]
+criteria = "safe-to-deploy"
+user-id = 33035 # Taiki Endo (taiki-e)
+start = "2019-08-11"
+end = "2027-11-17"
+
+[[trusted.pin-project-lite]]
+criteria = "safe-to-deploy"
+user-id = 33035 # Taiki Endo (taiki-e)
+start = "2019-10-22"
+end = "2027-11-17"
+
+[[trusted.potential_utf]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2024-11-23"
+end = "2027-11-17"
+
+[[trusted.prettyplease]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2022-01-04"
+end = "2027-11-17"
+
+[[trusted.proc-macro2]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-04-23"
+end = "2027-11-17"
+
+[[trusted.regex]]
+criteria = "safe-to-deploy"
+user-id = 189 # Andrew Gallant (BurntSushi)
+start = "2019-02-27"
+end = "2027-11-17"
+
+[[trusted.regex-automata]]
+criteria = "safe-to-deploy"
+user-id = 189 # Andrew Gallant (BurntSushi)
+start = "2019-02-25"
+end = "2027-11-17"
+
+[[trusted.regex-syntax]]
+criteria = "safe-to-deploy"
+user-id = 189 # Andrew Gallant (BurntSushi)
+start = "2019-03-30"
+end = "2027-11-17"
+
+[[trusted.rustix]]
+criteria = "safe-to-deploy"
+user-id = 6825 # Dan Gohman (sunfishcode)
+start = "2021-10-29"
+end = "2027-11-17"
+
+[[trusted.rustversion]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-07-08"
+end = "2027-11-17"
+
+[[trusted.same-file]]
+criteria = "safe-to-deploy"
+user-id = 189 # Andrew Gallant (BurntSushi)
+start = "2019-07-16"
+end = "2027-11-17"
+
+[[trusted.serde]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-03-01"
+end = "2027-11-17"
+
+[[trusted.serde_core]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2025-09-13"
+end = "2027-11-17"
+
+[[trusted.serde_derive]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-03-01"
+end = "2027-11-17"
+
+[[trusted.serde_json]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-02-28"
+end = "2027-11-17"
+
+[[trusted.serde_spanned]]
+criteria = "safe-to-deploy"
+user-id = 6743 # Ed Page (epage)
+start = "2023-01-20"
+end = "2027-11-17"
+
+[[trusted.slab]]
+criteria = "safe-to-deploy"
+user-id = 6741 # Alice Ryhl (Darksonn)
+start = "2021-10-13"
+end = "2027-11-17"
+
+[[trusted.smallvec]]
+criteria = "safe-to-deploy"
+user-id = 2017
+start = "2019-10-28"
+end = "2027-11-17"
+
+[[trusted.syn]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-03-01"
+end = "2027-11-17"
+
+[[trusted.thiserror]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-10-09"
+end = "2027-11-17"
+
+[[trusted.thiserror-impl]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2019-10-09"
+end = "2027-11-17"
+
+[[trusted.tinystr]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2021-01-14"
+end = "2027-11-17"
+
+[[trusted.tinystr]]
+criteria = "safe-to-deploy"
+user-id = 166196 # Robert Bastian (robertbastian)
+start = "2023-01-26"
+end = "2027-11-17"
+
+[[trusted.tokio]]
+criteria = "safe-to-deploy"
+user-id = 6741 # Alice Ryhl (Darksonn)
+start = "2020-12-25"
+end = "2027-11-17"
+
+[[trusted.toml]]
+criteria = "safe-to-deploy"
+user-id = 1
+start = "2019-05-16"
+end = "2027-11-17"
+
+[[trusted.toml]]
+criteria = "safe-to-deploy"
+user-id = 6743 # Ed Page (epage)
+start = "2022-12-14"
+end = "2027-11-17"
+
+[[trusted.toml_datetime]]
+criteria = "safe-to-deploy"
+user-id = 6743 # Ed Page (epage)
+start = "2022-10-21"
+end = "2027-11-17"
+
+[[trusted.toml_parser]]
+criteria = "safe-to-deploy"
+user-id = 6743 # Ed Page (epage)
+start = "2025-07-08"
+end = "2027-11-17"
+
+[[trusted.toml_writer]]
+criteria = "safe-to-deploy"
+user-id = 6743 # Ed Page (epage)
+start = "2025-07-08"
+end = "2027-11-17"
+
+[[trusted.unicase]]
+criteria = "safe-to-deploy"
+user-id = 359 # Sean McArthur (seanmonstar)
+start = "2019-03-05"
+end = "2027-11-17"
+
+[[trusted.unicode-ident]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2021-10-02"
+end = "2027-11-17"
+
+[[trusted.url]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2021-02-18"
+end = "2027-11-17"
+
+[[trusted.walkdir]]
+criteria = "safe-to-deploy"
+user-id = 189 # Andrew Gallant (BurntSushi)
+start = "2019-06-09"
+end = "2027-11-17"
+
+[[trusted.wasm-bindgen]]
+criteria = "safe-to-deploy"
+user-id = 1
+start = "2019-03-04"
+end = "2027-11-17"
+
+[[trusted.wasm-bindgen-futures]]
+criteria = "safe-to-deploy"
+user-id = 1
+start = "2019-03-04"
+end = "2027-11-17"
+
+[[trusted.wasm-bindgen-macro]]
+criteria = "safe-to-deploy"
+user-id = 1
+start = "2019-03-04"
+end = "2027-11-17"
+
+[[trusted.wasm-bindgen-macro-support]]
+criteria = "safe-to-deploy"
+user-id = 1
+start = "2019-03-04"
+end = "2027-11-17"
+
+[[trusted.wasm-bindgen-shared]]
+criteria = "safe-to-deploy"
+user-id = 1
+start = "2019-03-04"
+end = "2027-11-17"
+
+[[trusted.web-sys]]
+criteria = "safe-to-deploy"
+user-id = 1
+start = "2019-03-04"
+end = "2027-11-17"
+
+[[trusted.winapi-util]]
+criteria = "safe-to-deploy"
+user-id = 189 # Andrew Gallant (BurntSushi)
+start = "2020-01-11"
+end = "2027-11-17"
+
+[[trusted.windows-sys]]
+criteria = "safe-to-deploy"
+user-id = 64539 # Kenny Kerr (kennykerr)
+start = "2021-11-15"
+end = "2027-11-17"
+
+[[trusted.winnow]]
+criteria = "safe-to-deploy"
+user-id = 6743 # Ed Page (epage)
+start = "2023-02-22"
+end = "2027-11-17"
+
+[[trusted.writeable]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2021-11-01"
+end = "2027-11-17"
+
+[[trusted.writeable]]
+criteria = "safe-to-deploy"
+user-id = 166196 # Robert Bastian (robertbastian)
+start = "2023-01-26"
+end = "2027-11-17"
+
+[[trusted.yoke]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2021-05-01"
+end = "2027-11-17"
+
+[[trusted.yoke]]
+criteria = "safe-to-deploy"
+user-id = 166196 # Robert Bastian (robertbastian)
+start = "2023-01-26"
+end = "2027-11-17"
+
+[[trusted.yoke-derive]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2021-07-02"
+end = "2027-11-17"
+
+[[trusted.yoke-derive]]
+criteria = "safe-to-deploy"
+user-id = 166196 # Robert Bastian (robertbastian)
+start = "2023-01-26"
+end = "2027-11-17"
+
+[[trusted.zerofrom]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2022-04-06"
+end = "2027-11-17"
+
+[[trusted.zerofrom]]
+criteria = "safe-to-deploy"
+user-id = 166196 # Robert Bastian (robertbastian)
+start = "2024-05-28"
+end = "2027-11-17"
+
+[[trusted.zerofrom-derive]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2022-04-06"
+end = "2027-11-17"
+
+[[trusted.zerofrom-derive]]
+criteria = "safe-to-deploy"
+user-id = 166196 # Robert Bastian (robertbastian)
+start = "2024-05-28"
+end = "2027-11-17"
+
+[[trusted.zerotrie]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2023-10-03"
+end = "2027-11-17"
+
+[[trusted.zerotrie]]
+criteria = "safe-to-deploy"
+user-id = 166196 # Robert Bastian (robertbastian)
+start = "2023-11-16"
+end = "2027-11-17"
+
+[[trusted.zerovec]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2021-04-19"
+end = "2027-11-17"
+
+[[trusted.zerovec]]
+criteria = "safe-to-deploy"
+user-id = 166196 # Robert Bastian (robertbastian)
+start = "2023-01-26"
+end = "2027-11-17"
+
+[[trusted.zerovec-derive]]
+criteria = "safe-to-deploy"
+user-id = 1139 # Manish Goregaokar (Manishearth)
+start = "2021-12-11"
+end = "2027-11-17"
+
+[[trusted.zerovec-derive]]
+criteria = "safe-to-deploy"
+user-id = 166196 # Robert Bastian (robertbastian)
+start = "2023-01-26"
+end = "2027-11-17"
+
+[[trusted.zmij]]
+criteria = "safe-to-deploy"
+user-id = 3618 # David Tolnay (dtolnay)
+start = "2025-12-18"
+end = "2027-11-17"
