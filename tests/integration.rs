@@ -12,7 +12,7 @@ use std::thread;
 use std::time::Duration;
 
 use common::{PollError, Workspace, poll_until};
-use my_project::{DEFAULT_LARGE_THRESHOLD, Size, classify};
+use pyle::{DEFAULT_LARGE_THRESHOLD, Size, classify};
 
 #[test]
 fn a_file_with_enough_lines_classifies_as_large() {

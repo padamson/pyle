@@ -32,7 +32,7 @@ impl fmt::Display for SizeError {
 impl std::error::Error for SizeError {}
 
 /// The environment variable that overrides [`DEFAULT_LARGE_THRESHOLD`].
-pub const LARGE_THRESHOLD_VAR: &str = "MY_PROJECT_LARGE_THRESHOLD";
+pub const LARGE_THRESHOLD_VAR: &str = "PYLE_LARGE_THRESHOLD";
 
 /// Counts at or above this are [`Size::Large`] unless the environment
 /// says otherwise.
@@ -41,7 +41,7 @@ pub const DEFAULT_LARGE_THRESHOLD: i64 = 10;
 /// Classify `count` with the default threshold.
 ///
 /// ```
-/// use my_project::{classify, Size, SizeError};
+/// use pyle::{classify, Size, SizeError};
 ///
 /// assert_eq!(classify(0), Ok(Size::Empty));
 /// assert_eq!(classify(10), Ok(Size::Large));

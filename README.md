@@ -1,45 +1,36 @@
-<!-- Replace "Project Name" with your project name. -->
-# Project Name
+# pyle
 
-<!-- Replace this line with a one-sentence description of your project. -->
+pyle holds the Leptos components my project landing pages share, such as
+the version switcher, code tabs, and roadmap, so a fix lands once for
+every site.
 
-<!--
-Template users: after creating your repo from this template, see SETUP.md
-for the full onboarding checklist. At minimum, replace every occurrence of
-`my-project` and `Project Name` throughout this file, and update
-`Cargo.toml` (name, description, repository, authors, keywords, categories).
--->
+**Status:** empty. The repository has its CI and supply-chain setup, and
+the first component (the version switcher, with the binary that writes
+its `versions.json`) comes next. It is not on crates.io.
+
+## What goes here
+
+The sites that use pyle each started as a copy of another, and the copies
+drifted: the version switcher's fix for sending a visitor back to an older
+release had to land three times. pyle takes the parts every site shares
+(the version switcher, code blocks and tabs, a data-driven roadmap, the
+feature card, the footer, and the banner), and each site themes them
+through CSS variables. The hero, the feature list, and anything else that
+is a site's own content stay in the site.
+
+Each component is built with a [theoria](https://github.com/padamson/theoria)
+story, for viewing it in the gallery, and
+[leptotes](https://github.com/padamson/leptotes) tests, which render it to
+HTML in a plain `cargo test`.
 
 ## Installation
 
-<!-- Replace `my-project` with your crate name. -->
-```bash
-cargo install my-project
+Take it from git, pinned to a commit:
+
+```toml
+[dependencies]
+pyle = { git = "https://github.com/padamson/pyle", rev = "<sha>" }
 ```
-
-## Usage
-
-<!-- Replace `my-project` with your binary name, or replace this section
-     entirely with library usage examples if this is a library crate. -->
-```bash
-my-project --help
-```
-
-## Agent skill
-
-<!-- Template users: keep this block if the crate ships a skill under
-     `skills/`; delete it (and the skills/ directory) if not. SETUP.md has
-     the checklist. -->
-[![skills.sh](https://skills.sh/b/OWNER/REPO)](https://skills.sh/OWNER/REPO)
-
-```bash
-npx skills add OWNER/REPO
-```
-
-Works with [Claude Code](https://claude.ai/code),
-[Codex](https://openai.com/codex/), [Cursor](https://cursor.com), and any
-other [compatible agent](https://agentskills.io/clients). The install copies
-the skill into your repo and records its source in `skills-lock.json`.
 
 ## Development
 

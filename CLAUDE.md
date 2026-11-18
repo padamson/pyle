@@ -1,6 +1,11 @@
-# Project Name
+# pyle
 
-<!-- Replace with a one-line description of what this project does -->
+A library of the Leptos components my project landing pages share (the
+version switcher, code tabs, the roadmap, and the rest), so a fix lands
+once for every site. Each component gets theoria stories and leptotes
+tests. Sites take pyle through git, pinned to a commit, and it is not
+published to crates.io. The `src/` seed is the template's placeholder
+until the first component replaces it.
 
 ## Development
 
@@ -69,9 +74,9 @@ what a pass looks like; CI is the backstop, not the plan.
   with only `ok` and `manual` lines. A session never runs it: these are admin
   changes, and its `gh` calls fail in the sandbox on purpose.
 
-**Not from a session at all**, changed on github.com or crates.io:
-creating the merge App, installing it on the repo and generating its key,
-Dependabot malware alerts, and the crate's Trusted Publisher.
+**Not from a session at all**, changed on github.com: creating the merge
+App, installing it on the repo and generating its key, and Dependabot
+malware alerts.
 
 **By eye:**
 
@@ -86,9 +91,11 @@ Dependabot malware alerts, and the crate's Trusted Publisher.
 
 ## Agent skills
 
-`skills/my-project/` is the skill this crate ships to consumers. Edits to
-it must bump `metadata.version` in its `SKILL.md`; the pre-commit hook
-and the `Skill version guard` CI job both enforce that.
+`skills/pyle/` is the skill this crate will ship to consumers. It stays
+hidden from installers (`metadata.internal: true`) until the first
+component's API settles. Edits to it must bump `metadata.version` in its
+`SKILL.md`; the pre-commit hook and the `Skill version guard` CI job both
+enforce that.
 
 Skills of tools this crate depends on are managed installs, not vendored:
 `skills-lock.json` (tracked) records each source and a content hash, and
@@ -154,33 +161,12 @@ retry, reported FLAKY). nextest does not run doctests, so `cargo test
 --doc` is its own step, and the crate keeps at least one doctest so that
 step is not a no-op.
 
-## Release process
+## Releases
 
-1. Update version in `Cargo.toml`
-2. Update `CHANGELOG.md`
-3. Commit: `git commit -m "Release vX.Y.Z"`
-4. Tag: `git tag vX.Y.Z`
-5. Push: `git push origin main --tags`
-
-The tag triggers CI, which first checks the hand-written versions: a tag
-that no publishable crate's version matches fails the run, and so does a
-released crate that requires a workspace sibling at anything but the
-sibling's current version. Then, side by side, it checks each crate's
-semver against its latest crates.io release, builds and tests, and runs
-`cargo deny` and `cargo vet` on the tagged commit (by calling the shared
-`supply-chain.yml` that `security.yml` also calls). It publishes to
-crates.io only once all of them have passed, and creates a GitHub Release.
-A crate not yet on crates.io skips the semver check, and a version
-already there skips the publish; any other answer from crates.io fails
-the run.
-
-A crate's first version is published by hand, since crates.io adds a
-trusted publisher only to a crate that exists. Then add `[policy.<crate>]
-audit-as-crates-io = false` to `supply-chain/config.toml`, commit it, and
-tag that commit, not the one you published from. Without the policy,
-`cargo vet` matches the path crate to its crates.io version and fails
-every push, and the tag's vet gate with it. The tag's run then finds the
-version on crates.io, skips the publish, and creates the GitHub Release.
-A crate new to the workspace gets the same order.
-
-<!-- Add custom skills under .claude/skills/ as needed -->
+pyle is `publish = false` and has no releases: sites depend on it through
+git, pinned to a commit SHA, and that SHA is the version. `release.yml`
+stays from the template so `scripts/github-settings.sh` can build the
+release-tag ruleset and the `release` environment from it, but a tag
+fails its first job, since no publishable crate matches. Publishing any
+part of pyle (the version switcher is the likely one) is a separate
+decision, and it starts by removing `publish = false`.
