@@ -4,8 +4,16 @@ A library of the Leptos components my project landing pages share (the
 version switcher, code tabs, the roadmap, and the rest), so a fix lands
 once for every site. Each component gets theoria stories and leptotes
 tests. Sites take pyle through git, pinned to a commit, and it is not
-published to crates.io. The `src/` seed is the template's placeholder
-until the first component replaces it.
+published to crates.io.
+
+The workspace has one crate per job:
+
+- `crates/pyle-core`: what a version is, which one is newest, and
+  the `versions.json` shape. No Leptos and no filesystem, so it builds
+  for the browser and for the CLI alike. It holds only what both the
+  components and the CLI use.
+- `crates/pyle`: the components. Its `src/` still holds the template's
+  seed until the version switcher replaces it.
 
 ## Development
 
@@ -150,7 +158,8 @@ test, asserting the value (`assert_eq!` on an enum, `matches!` on the
 error variant and what it names) rather than prose. The seed crate shows
 the shapes: a decision returned as a value, an error that carries the
 offending input, an environment read through an injected lookup, a
-`TempDir`-owning fixture and a bounded poll in `tests/common/mod.rs`,
+`TempDir`-owning fixture and a bounded poll in
+`crates/pyle/tests/common/mod.rs`,
 and one `#[ignore = "reason; run with ..."]` test as the gate for
 anything a fresh clone may lack. Never `return` from a test because a
 precondition is missing.
@@ -158,8 +167,9 @@ precondition is missing.
 `.config/nextest.toml` bounds every test with a slow-timeout; the hook
 runs the default profile (no retries) and CI runs `--profile ci` (one
 retry, reported FLAKY). nextest does not run doctests, so `cargo test
---doc` is its own step, and the crate keeps at least one doctest so that
-step is not a no-op.
+--doc` is its own step, and the workspace keeps at least one doctest so
+that step is not a no-op (`pyle-core` has one at the top of its
+`lib.rs`).
 
 ## Releases
 

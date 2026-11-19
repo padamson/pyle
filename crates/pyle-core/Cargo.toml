@@ -1,0 +1,24 @@
+[package]
+name = "pyle-core"
+description = "The versions of a static site deployed one folder per release, and the versions.json that lists them"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+publish.workspace = true
+categories = ["web-programming", "wasm"]
+keywords = ["versioning", "static-site", "github-pages"]
+
+[lints]
+workspace = true
+
+# No Leptos and no filesystem: the switcher reads this in the browser and
+# `pyle-cli` writes with it, so both agree on what a version is and which
+# one is newest.
+[dependencies]
+serde = { workspace = true }
+
+[dev-dependencies]
+serde_json = { workspace = true }

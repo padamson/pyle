@@ -1,0 +1,36 @@
+[package]
+name = "pyle"
+description = "Shared landing-page components for Leptos sites"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+publish.workspace = true
+categories = ["gui", "web-programming", "wasm"]
+keywords = ["leptos", "components", "landing-page"]
+
+[lints]
+workspace = true
+
+[dependencies]
+# A library must not turn on a Leptos runtime (csr, ssr, hydrate); the site
+# picks one through the passthrough features below.
+leptos = { workspace = true }
+# Only for the colocated `*.stories.rs` files (the `stories` feature),
+# never in a site's build.
+theoria = { workspace = true, optional = true }
+
+[dev-dependencies]
+# Renders a component to its SSR HTML in a plain test.
+leptotes = { workspace = true }
+# Scratch directories for the integration-test fixture in tests/common.
+tempfile = { workspace = true }
+
+[features]
+csr = ["leptos/csr", "theoria?/csr"]
+ssr = ["leptos/ssr", "theoria?/ssr"]
+hydrate = ["leptos/hydrate", "theoria?/hydrate"]
+# Compiles the component stories for the theoria gallery.
+stories = ["dep:theoria"]
