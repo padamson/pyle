@@ -14,6 +14,10 @@ The workspace has one crate per job:
   components and the CLI use.
 - `crates/pyle`: the components. Its `src/` still holds the template's
   seed until the version switcher replaces it.
+- `crates/pyle-cli`: the `pyle` binary, which copies a build into a
+  static site one folder per version and writes `versions.json` and the
+  root redirect. Checking out and pushing the site stay in each site's
+  workflow.
 
 ## Development
 

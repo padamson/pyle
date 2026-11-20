@@ -137,12 +137,13 @@ impl fmt::Display for Snapshot {
     }
 }
 
-/// A string that is not a version or a snapshot. Each variant carries the
-/// input, so the caller can say which one.
+/// A string that is not a version, a snapshot, or a prefix. Each variant
+/// carries the input, so the caller can say which one.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ParseError {
     NotAVersion(String),
     NotASnapshot(String),
+    NotAPrefix(String),
 }
 
 impl fmt::Display for ParseError {
@@ -156,11 +157,18 @@ impl fmt::Display for ParseError {
                 f,
                 "`{s}` is not a snapshot: expected `dev` or a version such as 0.14.0"
             ),
+            ParseError::NotAPrefix(s) => write!(
+                f,
+                "`{s}` is not a URL path: expected segments of letters, digits, and - . _ ~ separated by /"
+            ),
         }
     }
 }
 
 impl std::error::Error for ParseError {}
+
+/// The manifest's file name, at the site root.
+pub const MANIFEST_FILE: &str = "versions.json";
 
 /// The path a site is served under: `/cqa-grader` for a GitHub project
 /// site, or empty for a site at the root of its domain. Every URL the
@@ -171,7 +179,8 @@ pub struct Prefix(String);
 impl Prefix {
     /// Normalizes `path` to one leading slash and no trailing one, so
     /// `cqa-grader`, `/cqa-grader`, and `/cqa-grader/` are the same prefix,
-    /// and `""` and `/` are both the root.
+    /// and `""` and `/` are both the root. It takes `path` as written, for a
+    /// site's own constant; parse a prefix someone typed, which checks it.
     pub fn new(path: &str) -> Self {
         match path.trim_matches('/') {
             "" => Self(String::new()),
@@ -185,12 +194,38 @@ impl Prefix {
 
     /// Where the manifest lives: `/cqa-grader/versions.json`.
     pub fn manifest_url(&self) -> String {
-        format!("{}/versions.json", self.0)
+        format!("{}/{MANIFEST_FILE}", self.0)
     }
 
     /// The root of a snapshot: `/cqa-grader/dev/` or `/cqa-grader/v0.14.0/`.
     pub fn snapshot_url(&self, snapshot: &Snapshot) -> String {
         format!("{}/{}/", self.0, snapshot.dir_name())
+    }
+}
+
+/// Parses a prefix as [`Prefix::new`] does, and refuses one a URL path
+/// cannot hold as written (a host, a space, `..`, an empty segment), so a
+/// mistyped prefix fails where it was typed rather than in a visitor's
+/// browser.
+impl FromStr for Prefix {
+    type Err = ParseError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let prefix = Prefix::new(s);
+        let characters = prefix
+            .0
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || b"-._~/".contains(&b));
+        let segments = prefix
+            .0
+            .split('/')
+            .skip(1)
+            .all(|s| !matches!(s, "" | "." | ".."));
+        if characters && segments {
+            Ok(prefix)
+        } else {
+            Err(ParseError::NotAPrefix(s.to_string()))
+        }
     }
 }
 
@@ -222,6 +257,12 @@ impl Manifest {
     /// The newest release, or `None` before the first one.
     pub fn latest(&self) -> Option<Version> {
         self.versions.first().copied()
+    }
+
+    /// Where the site root sends a visitor: the newest release, or `dev`
+    /// before the first one.
+    pub fn root_snapshot(&self) -> Snapshot {
+        self.latest().map_or(Snapshot::Dev, Snapshot::Release)
     }
 
     /// Every release, newest first.
@@ -399,6 +440,46 @@ mod tests {
     }
 
     #[test]
+    fn the_prefix_error_names_the_input() {
+        let message = ParseError::NotAPrefix("/my site".to_string()).to_string();
+        assert!(message.contains("/my site"), "{message}");
+    }
+
+    #[test]
+    fn a_parsed_prefix_is_normalized_as_a_new_one() {
+        for path in ["cqa-grader", "/my-site_2.0~x/docs/", "", "/"] {
+            assert_eq!(path.parse::<Prefix>(), Ok(Prefix::new(path)), "{path:?}");
+        }
+    }
+
+    #[test]
+    fn a_prefix_with_a_character_a_url_path_lacks_is_refused() {
+        for bad in [
+            "https://padamson.github.io/x",
+            "/my site",
+            "/a\"b",
+            "/caf\u{e9}",
+        ] {
+            assert_eq!(
+                bad.parse::<Prefix>(),
+                Err(ParseError::NotAPrefix(bad.to_string())),
+                "{bad:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_prefix_with_an_empty_or_dot_segment_is_refused() {
+        for bad in ["/a//b", "/./x", "/../x", "/x/.."] {
+            assert_eq!(
+                bad.parse::<Prefix>(),
+                Err(ParseError::NotAPrefix(bad.to_string())),
+                "{bad:?}"
+            );
+        }
+    }
+
+    #[test]
     fn a_prefix_has_one_leading_slash_and_no_trailing_one() {
         for path in [
             "/cqa-grader",
@@ -467,6 +548,17 @@ mod tests {
     #[test]
     fn a_manifest_with_no_releases_has_no_latest() {
         assert_eq!(Manifest::default().latest(), None);
+    }
+
+    #[test]
+    fn the_root_sends_visitors_to_the_newest_release() {
+        let manifest = Manifest::new([v("0.9.0"), v("0.10.0")]);
+        assert_eq!(manifest.root_snapshot(), Snapshot::Release(v("0.10.0")));
+    }
+
+    #[test]
+    fn before_the_first_release_the_root_sends_visitors_to_dev() {
+        assert_eq!(Manifest::default().root_snapshot(), Snapshot::Dev);
     }
 
     // The shape every snapshot deployed before pyle reads, through a struct

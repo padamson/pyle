@@ -1,0 +1,31 @@
+[package]
+name = "pyle-cli"
+description = "Deploys a static site one folder per version and writes the versions.json and root redirect that list them"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+publish.workspace = true
+categories = ["command-line-utilities", "web-programming"]
+keywords = ["versioning", "static-site", "github-pages"]
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "pyle"
+path = "src/main.rs"
+# The binary shares its name with the `pyle` library crate, and rustdoc
+# would write both to `target/doc/pyle/`.
+doc = false
+
+[dependencies]
+clap = { version = "4.6", features = ["derive"] }
+html-escape = "0.2"
+pyle-core = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }
