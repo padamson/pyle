@@ -1,0 +1,8 @@
+/* A Tailwind site's input.css with the line pyle's README asks for above
+   the import. `source(none)` and the inline source keep the build to the
+   reset and two utilities: the one the layer tests put on the bar, and a
+   shadow, which makes Tailwind open its output with `@layer properties;`
+   ahead of the site's line, as it does for a real site. */
+@layer theme, base, components, pyle, utilities;
+@import "tailwindcss" source(none);
+@source inline("bg-[rgb(255,0,255)] shadow-md");

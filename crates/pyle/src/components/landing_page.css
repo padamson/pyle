@@ -1,0 +1,13 @@
+body:has(.pyle-page) {
+  margin: 0;
+  background: var(--pyle-page);
+}
+
+.pyle-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--pyle-page);
+  color: var(--pyle-text);
+  font-family: var(--pyle-font);
+}

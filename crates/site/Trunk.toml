@@ -1,0 +1,5 @@
+[build]
+target = "index.html"
+# `trunk serve` previews at the root. scripts/site.sh builds each snapshot
+# with the public URL it is deployed under (`/pyle/<snapshot>/`).
+public_url = "/"

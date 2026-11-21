@@ -6,6 +6,7 @@ use leptos::prelude::*;
 use leptos::task::spawn_local;
 use pyle_core::{Manifest, Prefix, Snapshot};
 
+use super::classes;
 use crate::versions::{Notice, notice, version_options};
 
 /// The bar's rules, which [`crate::stylesheet`] puts in `@layer pyle`.
@@ -76,7 +77,7 @@ pub fn VersionBar(
     };
 
     view! {
-        <div id="version-switcher" class=bar_class(&class)>
+        <div id="version-switcher" class=classes("pyle-version-bar", &class)>
             <div class="pyle-version-bar-inner">
                 <label for="version-select" class="pyle-version-label">
                     "Version"
@@ -169,10 +170,6 @@ async fn fetch_manifest(url: &str) -> Option<Manifest> {
         return None;
     }
     response.json().await.ok()
-}
-
-fn bar_class(extra: &str) -> String {
-    format!("pyle-version-bar {extra}").trim_end().to_string()
 }
 
 fn message(note: &Notice, dev_notice: &str) -> String {

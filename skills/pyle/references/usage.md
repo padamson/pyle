@@ -8,7 +8,7 @@ of intent, and the mistake a first use makes.
 - `<PyleStyles theme=Theme />`: puts pyle's stylesheet in the page.
   Mount it once, above the first component. `theme` is optional; the
   default is a plain look that follows the system's light or dark.
-- `Theme { palette, dark, radius, font }` and `Palette { surface,
+- `Theme { palette, dark, radius, font }` and `Palette { page, surface,
   surface_strong, border, text, text_muted, accent, accent_hover }`: each
   field is a `&'static str` of CSS, written to `:root` as `--pyle-*`.
   `dark: None` is a site that looks the same either way. To set one
@@ -22,20 +22,39 @@ of intent, and the mistake a first use makes.
   components, pyle, utilities;` above `@import "tailwindcss";`. Hand-written
   layers: `@layer base, pyle, utilities;`.
 
+## Page and sections
+
+- `<LandingPage>{sections}</LandingPage>`: the page, in the theme's page
+  color, text color, and font, with the sections stacked top to bottom in
+  the order given. Optional: `class`. It lays out nothing inside a
+  section; each section sets its own width. On the `<body>` that holds it,
+  it zeroes the margin and sets the page's color, and with a `dark` palette
+  it sets `color-scheme: light dark` on the root.
+- `<Hero title tagline>{links}</Hero>`: the opening section. `tagline` and
+  the children (links or buttons, in a row under the tagline) are
+  optional. Also takes `class`.
+- A page is pyle's sections and nothing else. A section the site needs and
+  pyle lacks is built in pyle first, with stories and tests.
+- First-use mistake: wrapping sections in the site's own `<div>`s for
+  spacing or width. Each section owns its spacing; a site that needs
+  different spacing asks for a setting on the component.
+
 ## Designing a theme
 
 - By hand: in a clone of pyle, `./scripts/gallery.sh serve`, then the story
   "Theme/Playground" at http://localhost:8081. One control per field; the
-  block under the components is the `Theme` as Rust.
+  block above the page is the `Theme` as Rust.
 - As an agent: write the `Theme` in the site, then check it where the site
   shows it, in the site's theoria gallery (below) or the built site. The
-  fields and what draws with each: `surface` behind a bar, `surface_strong`
-  behind a control on it, `border` around both, `text` and `text_muted`
-  (labels) on `surface`, `accent` for a notice and its link, `accent_hover`
-  for the link under the pointer. Check the contrast of `text`,
-  `text_muted`, and `accent` against `surface`, and of `text` against
-  `surface_strong`. Nothing in pyle checks it.
-- `StorySite { prefix, page, theme, ..StorySite::default() }` and
+  fields and what draws with each: `page` behind the whole page, with the
+  hero's title (`text`), tagline (`text_muted`), and links (`accent`) on
+  it; `surface` behind a bar, `surface_strong` behind a control on it,
+  `border` around both, `text` and `text_muted` (labels) on `surface`,
+  `accent` for a notice and its link, `accent_hover` for a link under the
+  pointer. Check the contrast of `text`, `text_muted`, and `accent` against
+  both `page` and `surface`, and of `text` against `surface_strong`.
+  Nothing in pyle checks it.
+- `StorySite { prefix, theme, ..StorySite::default() }` and
   `pyle::stories_for(site) -> theoria::Stories` (the
   `stories` feature): every component in each state, under the site's
   theme, for the site's own gallery. Pass the same `Theme` the site hands

@@ -1,19 +1,25 @@
-//! The Leptos components my project landing pages share, so a fix lands
-//! once for every site.
+//! The Leptos components my project landing pages are built from, so a fix
+//! lands once for every site.
 //!
-//! A site mounts [`PyleStyles`] once with its [`Theme`], then the
-//! components:
+//! A site mounts [`PyleStyles`] once with its [`Theme`], then builds its
+//! page from pyle's sections inside a [`LandingPage`], in the order it
+//! wants them:
 //!
 //! ```
 //! use leptos::prelude::*;
-//! use pyle::{Prefix, PyleStyles, Snapshot, Theme, VersionSwitcher};
+//! use pyle::{Hero, LandingPage, Prefix, PyleStyles, Snapshot, Theme, VersionSwitcher};
 //!
 //! #[component]
 //! fn App() -> impl IntoView {
 //!     let current: Snapshot = "0.15.0".parse().expect("the build's SITE_VERSION");
 //!     view! {
 //!         <PyleStyles theme=Theme::default() />
-//!         <VersionSwitcher current prefix=Prefix::new("/cqa-grader") />
+//!         <LandingPage>
+//!             <VersionSwitcher current prefix=Prefix::new("/cqa-grader") />
+//!             <Hero title="cqa-grader" tagline="What it does, in a line.">
+//!                 <a href="https://github.com/padamson/cqa-grader">"Source"</a>
+//!             </Hero>
+//!         </LandingPage>
 //!     }
 //! }
 //! ```
@@ -30,7 +36,7 @@ mod components;
 mod theme;
 mod versions;
 
-pub use components::{DEFAULT_DEV_NOTICE, VersionBar, VersionSwitcher};
+pub use components::{DEFAULT_DEV_NOTICE, Hero, LandingPage, VersionBar, VersionSwitcher};
 pub use pyle_core::{Manifest, Prefix, Snapshot, Version};
 pub use theme::{Palette, PyleStyles, Theme, stylesheet};
 pub use versions::{Notice, VersionOption, notice, version_options};

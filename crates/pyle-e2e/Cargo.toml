@@ -1,7 +1,8 @@
 # Outside the workspace (the root `exclude`s it), with its own Cargo.lock:
-# pyle's browser tests. They serve the theoria gallery built from pyle's
-# stories, beside a site that pyle-cli deploys for the test, and drive both
-# in Chromium with playwright-rs.
+# pyle's browser tests, which drive Chromium with playwright-rs. They test
+# pyle's own landing page (crates/site) deployed with pyle-cli, the cascade
+# between a site's stylesheet and pyle's on static pages, and the theoria
+# gallery built from pyle's stories.
 [package]
 name = "pyle-e2e"
 version = "0.1.0"
@@ -14,9 +15,12 @@ publish = false
 
 [dev-dependencies]
 playwright-rs = { git = "https://github.com/padamson/playwright-rust", branch = "main" }
-# Deploys the site the version switcher reads, the way a site's workflow does.
+# Deploys the site's snapshots, the way a site's workflow does.
 pyle-cli = { path = "../pyle-cli" }
-pyle-core = { path = "../pyle-core" }
+# The stylesheet and the bar the layer tests put on a static page.
+pyle = { path = "../pyle" }
+leptos = { version = "0.8", default-features = false }
+leptotes = { git = "https://github.com/padamson/leptotes", branch = "main" }
 tokio = { version = "1", features = ["full"] }
 axum = "0.8"
 tower-http = { version = "0.7", features = ["fs"] }

@@ -1,0 +1,3 @@
+/* The same input.css without the line: a site that leaves it out. */
+@import "tailwindcss" source(none);
+@source inline("bg-[rgb(255,0,255)] shadow-md");

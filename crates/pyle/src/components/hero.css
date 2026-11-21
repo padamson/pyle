@@ -1,0 +1,43 @@
+.pyle-hero {
+  padding-block: 4rem;
+}
+
+.pyle-hero-inner {
+  box-sizing: border-box;
+  max-width: 64rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+.pyle-hero-title {
+  margin: 0;
+  color: var(--pyle-text);
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.pyle-hero-tagline {
+  max-width: 40rem;
+  margin: 1rem 0 0;
+  color: var(--pyle-text-muted);
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+.pyle-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.pyle-hero-actions a {
+  color: var(--pyle-accent);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.pyle-hero-actions a:hover {
+  color: var(--pyle-accent-hover);
+}

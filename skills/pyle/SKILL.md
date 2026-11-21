@@ -3,7 +3,7 @@ name: pyle
 description: Use when a Leptos landing-page site depends on the pyle crate (a `pyle` git dependency in its `Cargo.toml`), when adding or changing a landing-page component such as the version switcher, a hero, code tabs, or the roadmap, or when a site needs a section pyle does not have yet.
 license: MIT OR Apache-2.0
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
   internal: true
 ---
 
@@ -29,8 +29,8 @@ frames them. The site supplies its content, a `Theme` (which sets CSS
 variables), the order of its sections, and settings on each component,
 and composes them. A section a site needs and pyle lacks is built in pyle
 first, even for one site; the site does not write its own markup or CSS
-for it. Only the version switcher is in pyle so far; the rest arrive one
-at a time.
+for it. The page frame (`LandingPage`), the version switcher, and the hero
+are in pyle so far; the rest arrive one at a time.
 
 pyle's styles are its own CSS, with no Tailwind, in the cascade layer
 `pyle`. A site mounts `<PyleStyles theme=.../>` once. While a site still

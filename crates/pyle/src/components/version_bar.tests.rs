@@ -2,12 +2,11 @@
 //! happens after it (picking a version, the manifest arriving) needs a
 //! browser.
 
-use std::collections::BTreeSet;
-
 use leptos::prelude::*;
 use pyle_core::{Manifest, Prefix, Snapshot, Version};
 
 use super::{DEFAULT_DEV_NOTICE, VersionBar, VersionSwitcher, message};
+use crate::components::test_support::unruled_classes;
 use crate::versions::Notice;
 
 const V13: Version = Version::new(0, 13, 0);
@@ -172,28 +171,18 @@ fn the_dev_notice_is_the_site_s_words_and_nothing_else() {
     );
 }
 
-// A class renamed in the component and not in its rules leaves that part
-// of the bar unstyled, and no other native test would say so. Main's build
-// with a release to go to draws every part: the notice and its link too.
+// Main's build with a release to go to draws every part of the bar: the
+// notice and its link too.
 #[test]
 fn every_class_the_bar_carries_has_a_rule_in_the_stylesheet() {
     let html = bar(Snapshot::Dev, releases());
-    let css = crate::stylesheet(&crate::Theme::default());
-    let classes: BTreeSet<&str> = html
-        .split("class=\"")
-        .skip(1)
-        .filter_map(|rest| rest.split('"').next())
-        .flat_map(str::split_whitespace)
-        .collect();
-    let unruled: Vec<&str> = classes
-        .iter()
-        .copied()
-        .filter(|class| !css.contains(&format!(".{class} {{")))
-        .collect();
     assert_eq!(
-        (classes.contains("pyle-version-link"), unruled),
-        (true, Vec::new()),
-        "{html}\n{css}"
+        (
+            leptotes::count(&html, "pyle-version-link"),
+            unruled_classes(&html)
+        ),
+        (1, Vec::<String>::new()),
+        "{html}"
     );
 }
 

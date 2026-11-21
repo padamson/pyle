@@ -30,3 +30,4 @@ Thumbs.db
 # re-include a path under an ignored directory.
 /.agents/
 /.claude/skills/*
+/crates/site/dist

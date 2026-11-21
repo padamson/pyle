@@ -3,9 +3,12 @@
 //! `stories` feature.
 
 use leptos::prelude::*;
+use pyle_core::{Manifest, Prefix, Snapshot, Version};
 use theoria::Stories;
 
-use super::{DEFAULT_DEV_NOTICE, version_bar_stories};
+use super::{
+    DEFAULT_DEV_NOTICE, Hero, LandingPage, hero_stories, landing_page_stories, version_bar_stories,
+};
 use crate::{PyleStyles, Theme};
 
 /// A site that mounts pyle's components, for stories that show them as the
@@ -13,16 +16,13 @@ use crate::{PyleStyles, Theme};
 /// [`stories_for`], built from the theme it mounts.
 ///
 /// The default is a site that has chosen nothing: the default theme, light
-/// or dark with the system, over the browser's own page color. Build one
-/// with `..StorySite::default()`, so that a field a later component adds
-/// does not break the site's gallery.
+/// or dark with the system. Build one with `..StorySite::default()`, so
+/// that a field a later component adds does not break the site's gallery.
 #[derive(Clone, Copy, Debug)]
 pub struct StorySite {
     /// The path the site is served under, as [`pyle_core::Prefix::new`]
     /// takes it.
     pub prefix: &'static str,
-    /// The CSS color of the page behind the components.
-    pub page: &'static str,
     /// What the version bar says on main's build.
     pub dev_notice: &'static str,
     /// The site's look.
@@ -33,26 +33,60 @@ impl Default for StorySite {
     fn default() -> Self {
         Self {
             prefix: "/my-site",
-            page: "Canvas",
             dev_notice: DEFAULT_DEV_NOTICE,
             theme: Theme::default(),
         }
     }
 }
 
-/// pyle's styles under `theme`, then `children` over a page of the color
-/// `page`: the frame every story draws its component in.
-pub(crate) fn framed(theme: Theme, page: &str, children: impl IntoView) -> impl IntoView {
+/// pyle's styles under `theme`, then `children` on the theme's page color:
+/// the frame every story draws a section in. A story of a whole page uses
+/// [`crate::LandingPage`] instead.
+pub(crate) fn framed(theme: Theme, children: impl IntoView) -> impl IntoView {
     view! {
         <PyleStyles theme />
-        <div style=format!("background: {page}; min-height: 7rem")>{children}</div>
+        <div style="min-height: 7rem; background: var(--pyle-page); color: var(--pyle-text); font-family: var(--pyle-font)">
+            {children}
+        </div>
     }
+}
+
+/// A whole page as `site` shows it, built from pyle's sections in the order
+/// a site would give them: the page story, and what the theme playground
+/// draws. A section added to pyle joins it here.
+///
+/// The bar starts on an older release, the state that draws with the most
+/// of the theme, and stays in the gallery as [`version_bar_stories`] has it.
+pub(crate) fn sample_page(site: StorySite) -> impl IntoView {
+    let older = Version::new(0, 14, 0);
+    let newest = Version::new(0, 15, 0);
+    let bar = version_bar_stories::staying_bar(
+        RwSignal::new(Snapshot::Release(older)),
+        Prefix::new(site.prefix),
+        Some(Manifest::new([older, newest])),
+        site.dev_notice.to_string(),
+        String::new(),
+    );
+    view! {
+        <PyleStyles theme=site.theme />
+        <LandingPage>
+            {bar}
+            <Hero title="Project name" tagline="What the project does, in a line or two.">
+                <a href="#source">"Source"</a>
+                <a href="#docs">"Docs"</a>
+            </Hero>
+        </LandingPage>
+    }
+    // Erased, as the bar's own stories are, for rustc's query depth limit.
+    .into_any()
 }
 
 /// Every component's stories, for pyle's own theoria gallery.
 pub fn stories() -> Stories {
-    version_bar_stories::stories()
+    landing_page_stories::for_site(StorySite::default())
         .into_iter()
+        .chain(version_bar_stories::stories())
+        .chain(hero_stories::for_site(StorySite::default()))
         .chain(crate::theme::stories::stories())
         .collect()
 }
@@ -66,19 +100,26 @@ pub fn stories() -> Stories {
 /// pub fn all_stories() -> theoria::Stories {
 ///     pyle::stories_for(StorySite {
 ///         prefix: "/cqa-grader",
-///         page: "#1b2a24",
 ///         // The `Theme` the site hands to `PyleStyles`.
 ///         theme: Theme::default(),
 ///         ..StorySite::default()
 ///     })
 /// }
 /// # let names: Vec<&str> = all_stories().into_iter().map(|story| story.name()).collect();
-/// # assert_eq!(names.len(), 5, "one story a state: {names:?}");
-/// # assert!(names.iter().all(|name| name.starts_with("Version bar/")), "{names:?}");
+/// # let under = |group: &str| names.iter().filter(|name| name.starts_with(group)).count();
+/// # assert_eq!(
+/// #     (under("Landing page/"), under("Version bar/"), under("Hero/"), names.len()),
+/// #     (1, 5, 2, 8),
+/// #     "{names:?}"
+/// # );
 /// ```
 ///
 /// Chain the site's own stories onto it:
 /// `pyle::stories_for(site).into_iter().chain(my_stories()).collect()`.
 pub fn stories_for(site: StorySite) -> Stories {
-    version_bar_stories::for_site(site).into()
+    landing_page_stories::for_site(site)
+        .into_iter()
+        .chain(version_bar_stories::for_site(site))
+        .chain(hero_stories::for_site(site))
+        .collect()
 }

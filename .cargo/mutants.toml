@@ -40,10 +40,14 @@ examine_globs = ["crates/*/src/**/*.rs"]
 # Stories, and the two functions that gather them (gallery.stories.rs),
 # compile only under the `stories` feature, so no test nextest runs builds
 # them. The browser tests in crates/pyle-e2e click through every story of
-# pyle's gallery (`every_story_shows_one_bar_with_pyle_s_styles`) and name
-# the ones they assert on; `stories_for`'s doctest checks what a site's
-# gallery gets.
-exclude_globs = ["crates/*/src/**/*.stories.rs"]
+# pyle's gallery (`every_story_carries_pyle_s_styles_once` in
+# tests/gallery.rs); `stories_for`'s doctest checks what a site's gallery
+# gets.
+#
+# pyle's landing page (crates/site) is one `main` and the components it
+# mounts, which run only in a browser; the site tests in crates/pyle-e2e
+# check it.
+exclude_globs = ["crates/*/src/**/*.stories.rs", "crates/site/**"]
 
 # Every exclude carries its equivalence argument next to it.
 # exclude_re = [
@@ -52,6 +56,6 @@ exclude_globs = ["crates/*/src/**/*.stories.rs"]
 # ]
 #
 # Not an equivalent mutant: the fetch of versions.json runs only in a
-# browser, where `the_bar_lists_the_releases_a_deploy_wrote` in
-# crates/pyle-e2e checks it and cargo-mutants does not run it.
+# browser, where `the_bar_lists_every_snapshot_the_deploy_holds` in
+# crates/pyle-e2e/tests/site.rs checks it and cargo-mutants does not run it.
 exclude_re = ["version_bar\\.rs.*fetch_manifest"]

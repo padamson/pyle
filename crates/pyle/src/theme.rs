@@ -13,6 +13,8 @@ pub(crate) mod stories;
 /// into the stylesheet as given.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Palette {
+    /// Behind the whole page.
+    pub page: &'static str,
     /// Behind a bar or a panel.
     pub surface: &'static str,
     /// Behind a control that sits on a surface.
@@ -60,6 +62,7 @@ impl Default for Theme {
 /// values.
 pub(crate) const DEFAULT: Theme = Theme {
     palette: Palette {
+        page: "#ffffff",
         surface: "#f6f7f8",
         surface_strong: "#ffffff",
         border: "#d0d4d9",
@@ -69,6 +72,7 @@ pub(crate) const DEFAULT: Theme = Theme {
         accent_hover: "#1f2328",
     },
     dark: Some(Palette {
+        page: "#0d1117",
         surface: "#161b22",
         surface_strong: "#0d1117",
         border: "#30363d",
@@ -83,6 +87,7 @@ pub(crate) const DEFAULT: Theme = Theme {
 
 fn colors(palette: &Palette) -> String {
     [
+        ("page", palette.page),
         ("surface", palette.surface),
         ("surface-strong", palette.surface_strong),
         ("border", palette.border),
@@ -108,6 +113,10 @@ pub fn stylesheet(theme: &Theme) -> String {
             "@media (prefers-color-scheme: dark) {{\n:root {{\n{}}}\n}}\n",
             colors(dark)
         );
+        // On a page pyle draws, what the browser draws itself (scrollbars,
+        // a menu's list) goes dark with the palette. A site that mounts a
+        // component on its own page keeps the scheme it has.
+        css += ":root:has(.pyle-page) {\n  color-scheme: light dark;\n}\n";
     }
     for rules in components::CSS {
         css += rules;
@@ -136,6 +145,7 @@ mod tests {
     use super::*;
 
     const PLAIN: Palette = Palette {
+        page: "p",
         surface: "s",
         surface_strong: "ss",
         border: "b",
@@ -218,6 +228,8 @@ mod tests {
         );
     }
 
+    // pyle styles its own elements and no others. The exceptions are the
+    // root and the body that hold a `LandingPage`, whose page pyle draws.
     #[test]
     fn every_rule_is_a_pyle_class_or_the_root() {
         let css = stylesheet(&Theme::default());
@@ -226,6 +238,8 @@ mod tests {
             .filter(|selector| {
                 !(selector.starts_with(".pyle-")
                     || *selector == ":root"
+                    || *selector == ":root:has(.pyle-page)"
+                    || *selector == "body:has(.pyle-page)"
                     || selector.starts_with("@media"))
             })
             .collect();
@@ -248,7 +262,8 @@ mod tests {
     fn the_theme_s_colors_are_root_variables() {
         assert_eq!(
             colors(&PLAIN),
-            "  --pyle-surface: s;\n  --pyle-surface-strong: ss;\n  --pyle-border: b;\n  \
+            "  --pyle-page: p;\n  --pyle-surface: s;\n  --pyle-surface-strong: ss;\n  \
+             --pyle-border: b;\n  \
              --pyle-text: t;\n  --pyle-text-muted: tm;\n  --pyle-accent: a;\n  \
              --pyle-accent-hover: ah;\n"
         );
@@ -263,10 +278,31 @@ mod tests {
         );
     }
 
+    // Neither the system's query nor a scheme for the browser's own parts.
     #[test]
     fn a_theme_with_one_look_asks_nothing_of_the_system() {
         let css = stylesheet(&one_look());
-        assert_eq!(leptotes::count(&css, "prefers-color-scheme"), 0, "{css}");
+        assert_eq!(leptotes::count(&css, "color-scheme"), 0, "{css}");
+    }
+
+    // Scoped to a page pyle draws: on the bare root it would turn a site's
+    // own page dark under a component it mounts. The browser test
+    // `the_browser_s_own_parts_follow_the_system_on_a_page_with_a_dark_palette`
+    // sees it applied.
+    #[test]
+    fn a_theme_with_a_dark_palette_lets_the_browser_s_parts_follow_the_system() {
+        let css = stylesheet(&Theme {
+            dark: Some(PLAIN),
+            ..one_look()
+        });
+        assert_eq!(
+            leptotes::count(
+                &css,
+                ":root:has(.pyle-page) {\n  color-scheme: light dark;\n}\n"
+            ),
+            1,
+            "{css}"
+        );
     }
 
     // Same selector, same layer: the later block wins, so the dark one has
@@ -284,7 +320,7 @@ mod tests {
         });
         let light = css.find("  --pyle-surface: s;\n");
         let dark =
-            css.find("@media (prefers-color-scheme: dark) {\n:root {\n  --pyle-surface: dark-s;\n");
+            css.find("@media (prefers-color-scheme: dark) {\n:root {\n  --pyle-page: p;\n  --pyle-surface: dark-s;\n");
         assert!(light.is_some() && light < dark, "{css}");
     }
 

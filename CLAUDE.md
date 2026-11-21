@@ -19,16 +19,25 @@ The workspace has one crate per job:
   `<name>.rs` beside its rules (`<name>.css`), its theoria stories
   (`<name>.stories.rs`), and its leptotes tests (`<name>.tests.rs`).
   `gallery.stories.rs` holds what the stories share and gathers them,
-  for pyle's gallery and for a site's. `versions.rs` decides what the version bar shows, without Leptos, and
-  `theme.rs` holds `Theme` and the one stylesheet, all of it in
-  `@layer pyle`.
+  for pyle's gallery and for a site's. `versions.rs` decides what the
+  version bar shows, without Leptos, and `theme.rs` holds `Theme` and the
+  one stylesheet, all of it in `@layer pyle`.
 - `crates/pyle-cli`: the `pyle` binary, which copies a build into a
   static site one folder per version and writes `versions.json` and the
   root redirect. Checking out and pushing the site stay in each site's
   workflow.
+- `crates/site`: pyle's own landing page, built with Trunk from pyle's
+  components and nothing else. `SITE_VERSION` at build time names the
+  snapshot it is (`dev` when unset), checked when it builds. Its `csr`
+  feature is on in Trunk's build and off in a plain workspace build, so
+  `cargo nextest run` tests pyle with no Leptos runtime turned on.
 
 `crates/pyle-e2e` sits outside the workspace with its own `Cargo.lock`:
-the browser tests, which drive the theoria gallery with playwright-rs.
+the browser tests, which drive Chromium with playwright-rs. `site.rs`
+deploys the site's snapshots with pyle-cli and tests them, `layers.rs`
+tests the cascade between a site's stylesheet and pyle's on static pages
+(two of them built by Tailwind and committed under `tests/fixtures/`), and
+`gallery.rs` checks that every story renders with pyle's styles.
 
 ## Development
 
@@ -42,21 +51,30 @@ cargo deny --workspace check bans licenses sources  # licenses, bans, sources
 prek run cargo-lockpatrol --all-files  # advisories in every tracked Cargo.lock (ignore list: deny.toml)
 cargo vet                # supply chain review
 ./scripts/gallery.sh serve  # the component gallery, http://localhost:8081
+(cd crates/site && trunk serve)  # pyle's landing page, http://localhost:8080
 ```
 
-The browser tests need the built gallery and Chromium:
+The browser tests need the built gallery, the built site, and Chromium:
 
 ```bash
 cargo run --manifest-path crates/pyle-e2e/Cargo.toml --example install-browsers  # once
 ./scripts/gallery.sh build
+./scripts/site.sh        # target/site/dev, v0.1.0, and v0.2.0
 cargo nextest run --manifest-path crates/pyle-e2e/Cargo.toml --config-file .config/nextest.toml --run-ignored all
 ```
 
 ## Claude Code sandbox
 
 The sandbox is on in user settings for every repo, and a session never
-writes outside its own working tree. There is no per-repo sandbox file
-to look for.
+writes outside its own working tree. `.claude/settings.json` (tracked)
+adds this repo's part: two Mach lookups, for network configuration and
+certificate trust, and the `excludedCommands` that run outside the
+sandbox (`git`, `gh`, `cargo nextest run`, `cargo run`,
+`./scripts/mutants.sh`, and `prek`). An exclusion applies only when the
+Bash call is that one command: with a pipe or an `&&`, the whole call
+runs sandboxed. So a session runs the browser tests itself, as the bare
+`cargo nextest run` under Development; piped into `tail`, Chromium is
+denied the Mach port it registers at launch and every test fails.
 
 ## Pre-commit hooks
 
@@ -76,9 +94,8 @@ install writes `.git/hooks`, which the sandbox protects. A commit made
 without the hook goes in unchecked and nothing reports it, so a session
 never says hooks ran on a commit it has not checked this way.
 
-Run `prek` as the first command of its own Bash call. `prek` is in the
-sandbox's `excludedCommands`, which match only the command that starts
-the call, so `git add -A && prek run --all-files` runs prek sandboxed and
+Run `prek` alone in its Bash call (Claude Code sandbox, above):
+`git add -A && prek run --all-files` runs prek sandboxed, and
 `end-of-file-fixer` fails opening `.claude/settings.json`.
 
 ## Manual checks
@@ -105,11 +122,17 @@ what a pass looks like; CI is the backstop, not the plan.
   (SETUP.md, "GitHub settings", lists what it sets). A pass is exit 0
   with only `ok` and `manual` lines. A session never runs it: these are admin
   changes, and its `gh` calls fail in the sandbox on purpose.
-- The browser tests (commands under Development): the sandbox does not
-  let Chromium start. A pass is every test in `crates/pyle-e2e` passing.
 - The gallery, for a new or restyled component: `./scripts/gallery.sh serve`, then
   each of its stories at http://localhost:8081. A session can start the
   server but cannot look at the page.
+- pyle's landing page, for a change to it or to a component on it:
+  `(cd crates/site && trunk serve)`, then http://localhost:8080. A pass
+  is the page as you meant it, in light and in dark.
+- The Tailwind fixtures, when the sites move to a new Tailwind release:
+  change the version in `scripts/tailwind-fixtures.sh` and run it. It
+  runs the Tailwind CLI Trunk downloaded for a site (or `TAILWINDCSS`),
+  which a session may not reach. A pass is both `tailwind-*.css` under
+  `crates/pyle-e2e/tests/fixtures/` opening with the new version's banner.
 
 **Not from a session at all**, changed on github.com: creating the merge
 App, installing it on the repo and generating its key, and Dependabot
@@ -197,8 +220,10 @@ the component decides is a plain function with unit tests
 (`versions.rs`). What its first render holds is a leptotes test
 (`<name>.tests.rs`). What the browser decides (the cascade, a fetch, a
 navigation, anything after the first render) is a test in
-`crates/pyle-e2e`, against a story. Every design decision about the
-components gets its test here, not in a site. A site's theme is the
+`crates/pyle-e2e`: against pyle's own site when a real deploy shows it,
+against a static page for the cascade, and against a story only for what
+the gallery itself does. Every design decision about the components gets
+its test here, not in a site. A site's theme is the
 site's decision, so no story here copies one: the gallery shows the
 default theme and the theme playground, and a site shows the components
 under its own theme with `pyle::stories_for`.

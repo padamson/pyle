@@ -38,26 +38,39 @@ Take it from git, pinned to a commit:
 pyle = { git = "https://github.com/padamson/pyle", rev = "<sha>" }
 ```
 
-## Using the version switcher
+## Building a page
 
-Mount `PyleStyles` once with the site's theme, then the switcher, with
-the snapshot this build is and the path the site is served under:
+Mount `PyleStyles` once with the site's theme, then a `LandingPage` with
+the site's sections in the order it wants them:
 
 ```rust
 use leptos::prelude::*;
-use pyle::{Prefix, PyleStyles, Snapshot, Theme, VersionSwitcher};
+use pyle::{Hero, LandingPage, Prefix, PyleStyles, Snapshot, Theme, VersionSwitcher};
 
 #[component]
 fn App() -> impl IntoView {
     let current: Snapshot = env!("SITE_VERSION").parse().expect("dev or X.Y.Z");
     view! {
         <PyleStyles theme=Theme::default() />
-        <VersionSwitcher current prefix=Prefix::new("/cqa-grader") />
+        <LandingPage>
+            <VersionSwitcher current prefix=Prefix::new("/cqa-grader") />
+            <Hero title="cqa-grader" tagline="What it does, in a line.">
+                <a href="https://github.com/padamson/cqa-grader">"Source"</a>
+            </Hero>
+        </LandingPage>
     }
 }
 ```
 
-The switcher reads `versions.json` from under the prefix and lists `dev`
+`LandingPage` paints the page in the theme's colors and stacks the
+sections; each section sets its own width. It also takes over the `<body>`
+that holds it: no margin, and the page's color behind the page. pyle's own landing page
+(`crates/site`) is built this way and nothing else.
+
+## Using the version switcher
+
+The switcher takes the snapshot this build is and the path the site is
+served under. It reads `versions.json` from under the prefix and lists `dev`
 and every release, newest first. On main's build it says so (`dev_notice`
 sets the words), and on an older release it links to the newest.
 `VersionBar` is the same bar with the manifest passed in.
@@ -83,13 +96,14 @@ outranks the utilities.
 
 ## Choosing a theme
 
-A site's look is a `Theme`: a palette, an optional second palette for
-visitors whose system asks for dark, a corner radius, and a font stack.
+A site's look is a `Theme`: a palette (the page's color among them), an
+optional second palette for visitors whose system asks for dark, a corner
+radius, and a font stack.
 Each field is CSS, so `"#f2d16b"` and `"rgb(36 56 50 / 0.8)"` both work.
 
 To design one, run pyle's gallery (`./scripts/gallery.sh serve` in a clone, under
 Development below) and open "Theme/Playground". Each control is one
-field. The components redraw as you type, and the block under them is the
+field. The page redraws as you type, and the block above it is the
 `Theme` as Rust, to paste into the site.
 
 A site with its own theoria gallery shows pyle's components there, under
@@ -102,15 +116,14 @@ use pyle::{StorySite, Theme};
 pub fn all_stories() -> theoria::Stories {
     pyle::stories_for(StorySite {
         prefix: "/cqa-grader",
-        page: "#1b2a24",
         theme: Theme::default(), // the `Theme` the site hands to `PyleStyles`
         ..StorySite::default()
     })
 }
 ```
 
-`page` is the color of the page behind the components. pyle's own gallery
-holds no site's theme, so a site that changes its look changes one place.
+pyle's own gallery holds no site's theme, so a site that changes its look
+changes one place.
 
 ## Deploying a versioned site
 
@@ -155,12 +168,14 @@ See [CLAUDE.md](CLAUDE.md) for development commands.
 cargo build
 cargo nextest run
 ./scripts/gallery.sh serve   # the component gallery, http://localhost:8081
+(cd crates/site && trunk serve)  # pyle's own landing page, http://localhost:8080
 ```
 
 The script runs the [theoria](https://github.com/padamson/theoria) CLI on
 the dependencies `Cargo.lock` pins; the gallery also needs the `wasm32-unknown-unknown` target and
 [Trunk](https://trunkrs.dev). The browser tests in `crates/pyle-e2e`
-drive that gallery in Chromium; [CLAUDE.md](CLAUDE.md) has the commands.
+drive the gallery and pyle's own landing page in Chromium, each built
+first; [CLAUDE.md](CLAUDE.md) has the commands.
 
 ## License
 

@@ -192,10 +192,11 @@ jobs:
     name: E2E
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    # The only check on what a browser decides: that a site's utilities
-    # outrank pyle's cascade layer, that the version bar reads a manifest
-    # pyle-cli wrote, and that picking a version opens it. The tests drive
-    # the theoria gallery built from pyle's stories with playwright-rs.
+    # The only check on what a browser decides. The tests drive, with
+    # playwright-rs, pyle's own landing page deployed with pyle-cli (the
+    # manifest, the redirect, picking a version, the theme in the browser),
+    # the cascade between a site's stylesheet and pyle's (a real Tailwind
+    # build among them), and the theoria gallery built from pyle's stories.
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
@@ -238,6 +239,10 @@ jobs:
       - name: Build the gallery
         run: ./scripts/gallery.sh build
 
+      # The snapshots the site tests deploy: main's build and two releases.
+      - name: Build pyle's landing page
+        run: ./scripts/site.sh
+
       # No Playwright version here: the example asks playwright-rs for the
       # browser its driver expects, so a bump in the e2e lockfile moves the
       # browser too (crates/pyle-e2e/examples/install-browsers.rs says
@@ -247,7 +252,7 @@ jobs:
 
       # Under nextest so the slow-timeout in .config/nextest.toml applies.
       # The e2e crate is its own workspace root, so the config is named.
-      # Every test is `#[ignore]`d (it needs the gallery and Chromium), hence
-      # `--run-ignored all`; each fails if the gallery is not where it looks.
+      # Every test is `#[ignore]`d (it needs a build and Chromium), hence
+      # `--run-ignored all`; each fails if what it serves is not built.
       - name: Run e2e
         run: cargo nextest run --locked --manifest-path crates/pyle-e2e/Cargo.toml --config-file .config/nextest.toml --profile ci --run-ignored all

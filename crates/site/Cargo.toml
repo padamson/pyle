@@ -1,0 +1,29 @@
+[package]
+name = "pyle-site"
+description = "pyle's own landing page, built only from pyle's components"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+leptos = { workspace = true }
+pyle = { path = "../pyle" }
+
+[build-dependencies]
+# Checks SITE_VERSION when the site builds.
+pyle-core = { workspace = true }
+
+[features]
+# Trunk builds the site with this on (`data-cargo-features` in index.html).
+# A plain workspace build leaves it off, so `cargo nextest run` tests pyle
+# with no Leptos runtime turned on, as before the site joined. Builds with
+# `--all-features` (clippy, the doctests) turn it on, as they already turned
+# on pyle's own `csr`.
+csr = ["leptos/csr", "pyle/csr"]
