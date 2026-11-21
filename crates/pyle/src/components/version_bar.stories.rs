@@ -134,6 +134,7 @@ fn on_site(
                             class=class.clone()
                         />
                     }
+                    .into_any()
                 }}
             </div>
             <p style="padding: 1rem 1.5rem; font: 0.875rem ui-monospace, monospace; color: GrayText">
@@ -144,7 +145,10 @@ fn on_site(
                     <button on:click=move |_| shown.set(current)>"Back to the story's build"</button>
                 </Show>
             </p>
-        },
+        }
+        // Erased, so the frame's view type stays shallow enough for rustc's
+        // query depth limit, which a cold build of the stories exceeds.
+        .into_any(),
     )
 }
 
