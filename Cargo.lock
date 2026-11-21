@@ -622,6 +622,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c9356095b4b41197bba32173600e1582792cda618f65d12f68e2e77d273413c5"
 
 [[package]]
+name = "html-escape"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d45ed4d99334da2a2f221504e8ffc8ad09baf2a452b154465a976bfde697b004"
+
+[[package]]
 name = "http"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -918,7 +924,7 @@ dependencies = [
  "cfg-if",
  "convert_case 0.11.0",
  "convert_case_extras",
- "html-escape",
+ "html-escape 0.2.15",
  "itertools",
  "leptos_hot_reload",
  "prettyplease",
@@ -1174,7 +1180,7 @@ name = "pyle-cli"
 version = "0.1.0"
 dependencies = [
  "clap",
- "html-escape",
+ "html-escape 0.3.1",
  "pyle-core",
  "serde_json",
  "tempfile",
@@ -1591,7 +1597,7 @@ dependencies = [
  "either_of",
  "erased",
  "futures",
- "html-escape",
+ "html-escape 0.2.15",
  "indexmap",
  "itertools",
  "js-sys",
