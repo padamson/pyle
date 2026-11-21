@@ -12,24 +12,41 @@ The workspace has one crate per job:
   the `versions.json` shape. No Leptos and no filesystem, so it builds
   for the browser and for the CLI alike. It holds only what both the
   components and the CLI use.
-- `crates/pyle`: the components. Its `src/` still holds the template's
-  seed until the version switcher replaces it.
+- `crates/pyle`: the components, each in `src/components/` as
+  `<name>.rs` beside its rules (`<name>.css`), its theoria stories
+  (`<name>.stories.rs`), and its leptotes tests (`<name>.tests.rs`).
+  `gallery.stories.rs` holds what the stories share and gathers them,
+  for pyle's gallery and for a site's. `versions.rs` decides what the version bar shows, without Leptos, and
+  `theme.rs` holds `Theme` and the one stylesheet, all of it in
+  `@layer pyle`.
 - `crates/pyle-cli`: the `pyle` binary, which copies a build into a
   static site one folder per version and writes `versions.json` and the
   root redirect. Checking out and pushing the site stay in each site's
   workflow.
+
+`crates/pyle-e2e` sits outside the workspace with its own `Cargo.lock`:
+the browser tests, which drive the theoria gallery with playwright-rs.
 
 ## Development
 
 ```bash
 cargo build              # build
 cargo nextest run        # run tests
-cargo test --doc         # doc tests
+cargo test --doc --workspace --all-features  # doc tests, with the ones behind `stories`
 cargo clippy             # lint
 cargo fmt                # format
 cargo deny --workspace check bans licenses sources  # licenses, bans, sources
 prek run cargo-lockpatrol --all-files  # advisories in every tracked Cargo.lock (ignore list: deny.toml)
 cargo vet                # supply chain review
+./scripts/gallery.sh serve  # the component gallery, http://localhost:8081
+```
+
+The browser tests need the built gallery and Chromium:
+
+```bash
+cargo run --manifest-path crates/pyle-e2e/Cargo.toml --example install-browsers  # once
+./scripts/gallery.sh build
+cargo nextest run --manifest-path crates/pyle-e2e/Cargo.toml --config-file .config/nextest.toml --run-ignored all
 ```
 
 ## Claude Code sandbox
@@ -85,6 +102,11 @@ what a pass looks like; CI is the backstop, not the plan.
   (SETUP.md, "GitHub settings", lists what it sets). A pass is exit 0
   with only `ok` and `manual` lines. A session never runs it: these are admin
   changes, and its `gh` calls fail in the sandbox on purpose.
+- The browser tests (commands under Development): the sandbox does not
+  let Chromium start. A pass is every test in `crates/pyle-e2e` passing.
+- The gallery, for a new or restyled component: `./scripts/gallery.sh serve`, then
+  each of its stories at http://localhost:8081. A session can start the
+  server but cannot look at the page.
 
 **Not from a session at all**, changed on github.com: creating the merge
 App, installing it on the repo and generating its key, and Dependabot
@@ -159,14 +181,24 @@ narrows from there.
 
 A test is a claim about behavior, named as the claim, one claim per
 test, asserting the value (`assert_eq!` on an enum, `matches!` on the
-error variant and what it names) rather than prose. The seed crate shows
-the shapes: a decision returned as a value, an error that carries the
-offending input, an environment read through an injected lookup, a
-`TempDir`-owning fixture and a bounded poll in
-`crates/pyle/tests/common/mod.rs`,
-and one `#[ignore = "reason; run with ..."]` test as the gate for
-anything a fresh clone may lack. Never `return` from a test because a
-precondition is missing.
+error variant and what it names) rather than prose. The crates show the
+shapes: a decision returned as a value (`pyle::notice`), an error that
+carries the offending input (`pyle_cli::Error`), a `TempDir` fixture
+(`crates/pyle-cli/tests/cli.rs`), and `#[ignore = "reason; run with ..."]`
+as the gate for anything a fresh clone may lack (every test in
+`crates/pyle-e2e`). Never `return` from a test because a precondition is
+missing.
+
+A component's claims go to the cheapest test that can hold them. What
+the component decides is a plain function with unit tests
+(`versions.rs`). What its first render holds is a leptotes test
+(`<name>.tests.rs`). What the browser decides (the cascade, a fetch, a
+navigation, anything after the first render) is a test in
+`crates/pyle-e2e`, against a story. Every design decision about the
+components gets its test here, not in a site. A site's theme is the
+site's decision, so no story here copies one: the gallery shows the
+default theme and the theme playground, and a site shows the components
+under its own theme with `pyle::stories_for`.
 
 `.config/nextest.toml` bounds every test with a slow-timeout; the hook
 runs the default profile (no retries) and CI runs `--profile ci` (one

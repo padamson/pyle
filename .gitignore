@@ -1,5 +1,7 @@
-# Build artifacts
+# Build artifacts: the workspace's, and those of the browser-test crate,
+# which is its own workspace root
 /target
+/crates/pyle-e2e/target
 
 # cargo-mutants output (current run + rotated previous run)
 /mutants.out/

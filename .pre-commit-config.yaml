@@ -40,12 +40,31 @@ repos:
         types: [rust]
         pass_filenames: false
 
+      # pyle-e2e is outside the workspace, so `--all` above skips it.
+      - id: cargo-fmt-e2e
+        name: cargo fmt (pyle-e2e)
+        description: Auto-format the excluded e2e crate
+        entry: cargo fmt --manifest-path crates/pyle-e2e/Cargo.toml
+        language: system
+        files: ^crates/pyle-e2e/
+        pass_filenames: false
+
       - id: cargo-clippy
         name: cargo clippy
         description: Run clippy linter
         entry: cargo clippy --all-targets --all-features -- -D warnings
         language: system
         types: [rust]
+        pass_filenames: false
+
+      # pyle-e2e is outside the workspace, so the hook above skips it. It
+      # uses pyle-cli and pyle-core by path, so a change to either runs it.
+      - id: cargo-clippy-e2e
+        name: cargo clippy (pyle-e2e)
+        description: Run clippy on the excluded e2e crate
+        entry: cargo clippy --manifest-path crates/pyle-e2e/Cargo.toml --all-targets -- -D warnings
+        language: system
+        files: ^crates/(pyle-e2e|pyle-cli|pyle-core)/
         pass_filenames: false
 
       - id: cargo-check
@@ -72,7 +91,7 @@ repos:
       - id: cargo-doctest
         name: cargo test --doc
         description: Run documentation tests
-        entry: cargo test --doc --workspace
+        entry: cargo test --doc --workspace --all-features
         language: system
         types: [rust]
         pass_filenames: false

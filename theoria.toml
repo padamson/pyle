@@ -1,0 +1,7 @@
+# The gallery of pyle's components: `theoria serve` shows each one's
+# stories at http://localhost:8081, rebuilt on every source edit.
+[gallery]
+crate = "pyle"
+path = "crates/pyle"
+aggregator = "pyle::all_stories"
+features = ["stories"]

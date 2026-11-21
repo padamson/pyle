@@ -4,8 +4,8 @@ pyle holds the Leptos components my project landing pages share, such as
 the version switcher, code tabs, and roadmap, so a fix lands once for
 every site.
 
-**Status:** the `pyle` binary that deploys a site's versions is in place,
-and the first component, the version switcher, comes next. It is not on
+**Status:** the `pyle` binary that deploys a site's versions and the
+first component, the version switcher, are in place. It is not on
 crates.io.
 
 ## What goes here
@@ -31,6 +31,80 @@ Take it from git, pinned to a commit:
 [dependencies]
 pyle = { git = "https://github.com/padamson/pyle", rev = "<sha>" }
 ```
+
+## Using the version switcher
+
+Mount `PyleStyles` once with the site's theme, then the switcher, with
+the snapshot this build is and the path the site is served under:
+
+```rust
+use leptos::prelude::*;
+use pyle::{Prefix, PyleStyles, Snapshot, Theme, VersionSwitcher};
+
+#[component]
+fn App() -> impl IntoView {
+    let current: Snapshot = env!("SITE_VERSION").parse().expect("dev or X.Y.Z");
+    view! {
+        <PyleStyles theme=Theme::default() />
+        <VersionSwitcher current prefix=Prefix::new("/cqa-grader") />
+    }
+}
+```
+
+The switcher reads `versions.json` from under the prefix and lists `dev`
+and every release, newest first. On main's build it says so (`dev_notice`
+sets the words), and on an older release it links to the newest.
+`VersionBar` is the same bar with the manifest passed in.
+
+pyle's styles are its own CSS: classes named `pyle-*`, written against
+`--pyle-*` variables that `Theme` sets on `:root`, all in the cascade
+layer `pyle`. A site can set any of the variables in its own CSS, outside
+any layer or in a layer it ranks above `pyle` (one set in a lower layer,
+such as `base`, loses to the theme's), and can pass classes to a
+component's `class`. For those classes to win, the
+site's stylesheet has to rank the layer below its utilities, and above
+its reset, before pyle's styles arrive. In a Tailwind v4 `input.css`
+that is one line above the import:
+
+```css
+@layer theme, base, components, pyle, utilities;
+@import "tailwindcss";
+```
+
+A site with its own `base` and `utilities` layers writes `@layer base,
+pyle, utilities;`. Without the line, pyle's layer is declared last and
+outranks the utilities.
+
+## Choosing a theme
+
+A site's look is a `Theme`: a palette, an optional second palette for
+visitors whose system asks for dark, a corner radius, and a font stack.
+Each field is CSS, so `"#f2d16b"` and `"rgb(36 56 50 / 0.8)"` both work.
+
+To design one, run pyle's gallery (`./scripts/gallery.sh serve` in a clone, under
+Development below) and open "Theme/Playground". Each control is one
+field. The components redraw as you type, and the block under them is the
+`Theme` as Rust, to paste into the site.
+
+A site with its own theoria gallery shows pyle's components there, under
+the theme it mounts. Turn on pyle's `stories` feature where the site's
+stories are built, and return this from the gallery's aggregator:
+
+```rust
+use pyle::{StorySite, Theme};
+
+pub fn all_stories() -> theoria::Stories {
+    pyle::stories_for(StorySite {
+        prefix: "/cqa-grader",
+        page: "#1b2a24",
+        theme: Theme::default(), // the `Theme` the site hands to `PyleStyles`
+        ..StorySite::default()
+    })
+}
+```
+
+`page` is the color of the page behind the components. pyle's own gallery
+holds no site's theme, so a site that changes its look changes one place.
 
 ## Deploying a versioned site
 
@@ -74,7 +148,13 @@ See [CLAUDE.md](CLAUDE.md) for development commands.
 ```bash
 cargo build
 cargo nextest run
+./scripts/gallery.sh serve   # the component gallery, http://localhost:8081
 ```
+
+The script runs the [theoria](https://github.com/padamson/theoria) CLI on
+the dependencies `Cargo.lock` pins; the gallery also needs the `wasm32-unknown-unknown` target and
+[Trunk](https://trunkrs.dev). The browser tests in `crates/pyle-e2e`
+drive that gallery in Chromium; [CLAUDE.md](CLAUDE.md) has the commands.
 
 ## License
 

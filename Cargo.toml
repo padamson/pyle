@@ -1,5 +1,8 @@
 [workspace]
 members = ["crates/*"]
+# The browser tests: their own lockfile and their own CI job, so the
+# workspace builds without playwright-rs or a browser.
+exclude = ["crates/pyle-e2e"]
 resolver = "3"
 
 [workspace.package]

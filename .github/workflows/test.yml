@@ -93,10 +93,6 @@ jobs:
       - name: Build the components and their stories for wasm32
         run: cargo build -p pyle --lib --target wasm32-unknown-unknown --features csr,stories --locked
 
-      # The switcher reads the manifest with it in the browser.
-      - name: Build pyle-core for wasm32
-        run: cargo build -p pyle-core --target wasm32-unknown-unknown --locked
-
   lint:
     name: Lint
     runs-on: ubuntu-latest
@@ -118,8 +114,20 @@ jobs:
       - name: Check formatting
         run: cargo fmt --all -- --check
 
+      # pyle-e2e is outside the workspace, so `--all` above skips it.
+      - name: Check formatting (pyle-e2e)
+        run: cargo fmt --manifest-path crates/pyle-e2e/Cargo.toml -- --check
+
       - name: Run clippy
         run: cargo clippy --all-targets --all-features -- -D warnings
+
+      # pyle-e2e is outside the workspace, so the step above skips it.
+      # playwright-rs's build script downloads the Playwright driver, which
+      # a compile-only job never runs.
+      - name: Run clippy (pyle-e2e)
+        env:
+          PLAYWRIGHT_SKIP_DRIVER_DOWNLOAD: "1"
+        run: cargo clippy --locked --manifest-path crates/pyle-e2e/Cargo.toml --all-targets -- -D warnings
 
       # nextest does not run doctests, so this is its own step. The
       # workspace keeps at least one doctest (pyle-core's crate docs have one),
@@ -128,9 +136,11 @@ jobs:
       # on library targets, not on doctests: `cargo test --doc` errors
       # outright when no crate has a library, so the step goes with a
       # `src/lib.rs` in any crate.
+      # `--all-features` so the doctests on items behind `stories`
+      # (`pyle::stories_for`) run.
       - name: Run doc-tests
         if: hashFiles('**/src/lib.rs') != ''
-        run: cargo test --doc --workspace
+        run: cargo test --doc --workspace --all-features
 
       - name: Generate documentation
         run: cargo doc --no-deps --workspace
@@ -177,3 +187,67 @@ jobs:
       # pass is reported FLAKY instead of hiding, and a longer slow-timeout.
       - name: Run tests
         run: cargo nextest run --workspace --profile ci
+
+  e2e:
+    name: E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # The only check on what a browser decides: that a site's utilities
+    # outrank pyle's cascade layer, that the version bar reads a manifest
+    # pyle-cli wrote, and that picking a version opens it. The tests drive
+    # the theoria gallery built from pyle's stories with playwright-rs.
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # master
+        with:
+          toolchain: stable
+          targets: wasm32-unknown-unknown
+
+      - name: Cache Cargo
+        uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2
+        with:
+          shared-key: e2e
+          workspaces: |
+            .
+            crates/pyle-e2e
+
+      - name: Install Trunk and cargo-nextest
+        uses: taiki-e/install-action@cfdb7ed4ccc7c7dce37759eae89dc5674b469b39 # v2.90.3
+        with:
+          tool: trunk,cargo-nextest
+          fallback: none
+
+      # The CLI is built from the theoria commit Cargo.lock holds for the
+      # stories, so Dependabot's cargo entry moves it with the library.
+      # `--force` because the cache step may have restored an older one to
+      # ~/.cargo/bin.
+      - name: Install the theoria CLI at the locked commit
+        run: |
+          sha=$(sed -n 's|^source = "git+https://github.com/padamson/theoria?branch=main#\(.*\)"$|\1|p' Cargo.lock | head -n 1)
+          if [ -z "$sha" ]; then
+            echo "::error::Cargo.lock has no theoria commit"
+            exit 1
+          fi
+          cargo install --locked --force --git https://github.com/padamson/theoria --rev "$sha" theoria-cli
+
+      # The script starts the generated app from the workspace's lockfile,
+      # so the gallery is built on what Cargo.lock pins and not on
+      # theoria's `main` as of the run (scripts/gallery.sh says why).
+      - name: Build the gallery
+        run: ./scripts/gallery.sh build
+
+      # No Playwright version here: the example asks playwright-rs for the
+      # browser its driver expects, so a bump in the e2e lockfile moves the
+      # browser too (crates/pyle-e2e/examples/install-browsers.rs says
+      # why). `--with-deps` adds the system libraries a fresh runner lacks.
+      - name: Install Chromium for the bundled Playwright driver
+        run: cargo run --locked --manifest-path crates/pyle-e2e/Cargo.toml --example install-browsers -- --with-deps
+
+      # Under nextest so the slow-timeout in .config/nextest.toml applies.
+      # The e2e crate is its own workspace root, so the config is named.
+      # Every test is `#[ignore]`d (it needs the gallery and Chromium), hence
+      # `--run-ignored all`; each fails if the gallery is not where it looks.
+      - name: Run e2e
+        run: cargo nextest run --locked --manifest-path crates/pyle-e2e/Cargo.toml --config-file .config/nextest.toml --profile ci --run-ignored all

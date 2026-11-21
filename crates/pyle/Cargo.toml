@@ -18,6 +18,10 @@ workspace = true
 # A library must not turn on a Leptos runtime (csr, ssr, hydrate); the site
 # picks one through the passthrough features below.
 leptos = { workspace = true }
+# The version model: what a snapshot is, the manifest, and the URLs.
+pyle-core = { workspace = true }
+# Reads the site's versions.json in the browser.
+gloo-net = { version = "0.6", default-features = false, features = ["http", "json"] }
 # Only for the colocated `*.stories.rs` files (the `stories` feature),
 # never in a site's build.
 theoria = { workspace = true, optional = true }
@@ -25,8 +29,6 @@ theoria = { workspace = true, optional = true }
 [dev-dependencies]
 # Renders a component to its SSR HTML in a plain test.
 leptotes = { workspace = true }
-# Scratch directories for the integration-test fixture in tests/common.
-tempfile = { workspace = true }
 
 [features]
 csr = ["leptos/csr", "theoria?/csr"]

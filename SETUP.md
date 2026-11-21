@@ -102,6 +102,7 @@ classic omission) means a bump merges with that job red.
 - `Lint` — fmt, clippy, doctest, cargo doc (ubuntu-only)
 - `Test on ubuntu-latest`, `Test on macos-latest`, `Test on windows-latest`
 - `Build for wasm32` — the library under Leptos's `csr` feature, as sites build it
+- `E2E` — the browser tests in `crates/pyle-e2e`, against the built gallery
 - `supply-chain / License & Dependency Check`, `supply-chain / Supply Chain Review`
 - `mutation / Mutation Testing (diff)`, `Skill version guard`
 
