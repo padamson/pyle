@@ -21,7 +21,7 @@ leptos = { workspace = true }
 # The version model: what a snapshot is, the manifest, and the URLs.
 pyle-core = { workspace = true }
 # Reads the site's versions.json in the browser.
-gloo-net = { version = "0.6", default-features = false, features = ["http", "json"] }
+gloo-net = { version = "0.7", default-features = false, features = ["http", "json"] }
 # Only for the colocated `*.stories.rs` files (the `stories` feature),
 # never in a site's build.
 theoria = { workspace = true, optional = true }
