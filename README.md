@@ -1,8 +1,8 @@
 # pyle
 
-pyle holds the Leptos components my project landing pages share, such as
-the version switcher, code tabs, and roadmap, so a fix lands once for
-every site.
+pyle holds the Leptos components my project landing pages are built from,
+so a fix lands once for every site. A site's landing page is made of pyle
+components and nothing else.
 
 **Status:** the `pyle` binary that deploys a site's versions and the
 first component, the version switcher, are in place. It is not on
@@ -12,11 +12,17 @@ crates.io.
 
 The sites that use pyle each started as a copy of another, and the copies
 drifted: the version switcher's fix for sending a visitor back to an older
-release had to land three times. pyle takes the parts every site shares
-(the version switcher, code blocks and tabs, a data-driven roadmap, the
-feature card, the footer, and the banner), and each site themes them
-through CSS variables. The hero, the feature list, and anything else that
-is a site's own content stay in the site.
+release had to land three times. So the whole landing page comes from
+pyle: section components (the version switcher, a hero, a feature grid,
+code blocks and tabs, a data-driven roadmap, the footer, and the banner),
+and a page component that frames them. A site supplies its content, its
+`Theme`, and the order of its sections, and puts them together by
+composition. When a site needs a section pyle does not have, the section
+is built in pyle, even if only one site uses it.
+
+Sites still look different. Each picks its own sections and their order,
+its own theme, and its own settings on each component: square or rounded
+corners, shadows or none, motion or none.
 
 Each component is built with a [theoria](https://github.com/padamson/theoria)
 story, for viewing it in the gallery, and

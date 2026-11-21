@@ -1,8 +1,11 @@
 # pyle
 
-A library of the Leptos components my project landing pages share (the
-version switcher, code tabs, the roadmap, and the rest), so a fix lands
-once for every site. Each component gets theoria stories and leptotes
+A library of the Leptos components my project landing pages are built
+from, entirely: section components (the version switcher, a hero, code
+tabs, the roadmap, and the rest) and a page component that frames them, so
+a fix lands once for every site. A site supplies content, a theme, an
+arrangement, and settings on each component; a section a site needs and
+pyle lacks is built here. Each component gets theoria stories and leptotes
 tests. Sites take pyle through git, pinned to a commit, and it is not
 published to crates.io.
 
