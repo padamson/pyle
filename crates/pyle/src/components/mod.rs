@@ -24,6 +24,45 @@ fn classes(own: &str, extra: &str) -> String {
 pub(crate) mod test_support {
     use std::collections::BTreeSet;
 
+    use crate::{Palette, Theme};
+
+    /// A palette unlike the default's in every color.
+    pub(crate) const PLAIN: Palette = Palette {
+        page: "p",
+        surface: "s",
+        surface_strong: "ss",
+        border: "b",
+        text: "t",
+        text_muted: "tm",
+        accent: "a",
+        accent_hover: "ah",
+    };
+
+    /// A theme unlike the default in every field, with no dark palette.
+    pub(crate) const ONE_LOOK: Theme = Theme {
+        palette: PLAIN,
+        dark: None,
+        radius: "2px",
+        font: "serif",
+    };
+
+    /// The `<style>` element `PyleStyles` draws for `theme`.
+    pub(crate) fn styles_of(theme: &Theme) -> String {
+        format!(
+            r#"<style id="pyle-styles">{}</style>"#,
+            crate::stylesheet(theme)
+        )
+    }
+
+    /// How many `<style>` elements `html` holds, and how many of them are
+    /// `theme`'s.
+    pub(crate) fn stylesheets(html: &str, theme: &Theme) -> (usize, usize) {
+        (
+            leptotes::count(html, "<style"),
+            leptotes::count(html, &styles_of(theme)),
+        )
+    }
+
     /// Every class `html` carries that has no rule in pyle's stylesheet. A
     /// class renamed in a component and not in its rules leaves that part
     /// unstyled, and no other native test would say so.
@@ -58,21 +97,21 @@ mod tests {
     }
 }
 
-#[cfg(feature = "stories")]
+#[cfg(any(test, feature = "stories"))]
 #[path = "gallery.stories.rs"]
 pub(crate) mod gallery_stories;
 
-#[cfg(feature = "stories")]
+#[cfg(any(test, feature = "stories"))]
 #[path = "version_bar.stories.rs"]
 mod version_bar_stories;
 
-#[cfg(feature = "stories")]
+#[cfg(any(test, feature = "stories"))]
 #[path = "hero.stories.rs"]
 mod hero_stories;
 
-#[cfg(feature = "stories")]
+#[cfg(any(test, feature = "stories"))]
 #[path = "landing_page.stories.rs"]
 mod landing_page_stories;
 
-#[cfg(feature = "stories")]
+#[cfg(any(test, feature = "stories"))]
 pub use gallery_stories::{StorySite, stories, stories_for};

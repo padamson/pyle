@@ -10,7 +10,7 @@
 
 use leptos::prelude::*;
 use pyle_core::{Manifest, Prefix, Snapshot, Version};
-use theoria::{Story, story};
+use theoria::{Choice, Story, story};
 
 use super::gallery_stories::{StorySite, framed};
 use super::{DEFAULT_DEV_NOTICE, VersionBar};
@@ -80,13 +80,14 @@ fn states() -> [State; 5] {
 ///
 /// On a site, either opens another page, built from another snapshot, with
 /// its own bar. A story has no other page, and the gallery does not serve
-/// the link's address, so the story draws that page's bar in place.
+/// the link's address, so the story draws that page's bar in place. An edit
+/// to `dev_notice` or `class` draws the bar again on the build it shows.
 pub(crate) fn staying_bar(
     shown: RwSignal<Snapshot>,
     prefix: Prefix,
     manifest: Option<Manifest>,
-    dev_notice: String,
-    class: String,
+    dev_notice: Signal<String>,
+    class: Signal<String>,
 ) -> impl IntoView {
     let follow_link = {
         let manifest = manifest.clone();
@@ -113,9 +114,9 @@ pub(crate) fn staying_bar(
                         current=shown.get()
                         prefix=prefix.clone()
                         manifest=Signal::stored(manifest.clone())
-                        dev_notice=dev_notice.clone()
+                        dev_notice=dev_notice.get()
                         on_select=Callback::new(move |snapshot| shown.set(snapshot))
-                        class=class.clone()
+                        class=class.get()
                     />
                 }
                 .into_any()
@@ -131,8 +132,8 @@ fn on_site(
     site: StorySite,
     current: Snapshot,
     manifest: Option<Manifest>,
-    dev_notice: String,
-    class: String,
+    dev_notice: Signal<String>,
+    class: Signal<String>,
 ) -> impl IntoView {
     let prefix = Prefix::new(site.prefix);
     // The build whose bar is on show: the story's, until a pick or the link.
@@ -169,31 +170,52 @@ fn on_site(
 
 /// The bar with every input editable:
 ///
-/// - `current`: the build being viewed, `dev` or a version such as `0.14.0`.
-/// - `newest`: the newest release the manifest lists, or empty for a site
+/// - `current`: the build being viewed, main's or a release.
+/// - `newest`: the newest release the manifest lists, or none for a site
 ///   with no release yet.
 /// - `dev_notice`: what the bar says on main's build. It is drawn only
 ///   while `current` is `dev`.
 /// - `class`: classes from the site.
 ///
-/// It starts on `dev`, where all four show. Editing a control starts the
-/// story again from `current`, so a version picked in the bar's own menu
-/// is forgotten.
+/// It starts on `dev`, where all four show. Picking a `current` or a
+/// `newest` starts the story again from `current`, so a version picked in
+/// the bar's own menu is forgotten. An edit to `dev_notice` or `class`
+/// draws the bar again on the build it shows.
 #[story(
     name = "Version bar/Playground",
-    current = "dev",
-    newest = "0.15.0",
+    current = Choice::new([
+        Snapshot::Dev,
+        Snapshot::Release(V13),
+        Snapshot::Release(V14),
+        Snapshot::Release(V15),
+    ]),
+    newest = Choice::labelled([
+        ("none yet", None),
+        ("0.13.0", Some(V13)),
+        ("0.14.0", Some(V14)),
+        ("0.15.0", Some(V15)),
+    ])
+    .selected("0.15.0"),
     dev_notice = DEFAULT_DEV_NOTICE,
     class = ""
 )]
-fn playground(current: String, newest: String, dev_notice: String, class: String) -> impl IntoView {
+fn playground(
+    current: Signal<Choice<Snapshot>>,
+    newest: Signal<Choice<Option<Version>>>,
+    dev_notice: Signal<String>,
+    class: Signal<String>,
+) -> impl IntoView {
     let site = StorySite::default();
-    match current.parse::<Snapshot>() {
-        Ok(current) => {
-            let manifest = Manifest::new(newest.parse::<Version>().ok());
-            on_site(site, current, Some(manifest), dev_notice, class).into_any()
-        }
-        Err(err) => view! { <p>{err.to_string()}</p> }.into_any(),
+    move || {
+        let manifest = Manifest::new(newest.get().value());
+        on_site(
+            site,
+            current.get().value(),
+            Some(manifest),
+            dev_notice,
+            class,
+        )
+        .into_any()
     }
 }
 
@@ -208,8 +230,8 @@ pub fn for_site(site: StorySite) -> Vec<Story> {
                     site,
                     state.current,
                     state.manifest.clone(),
-                    site.dev_notice.to_string(),
-                    String::new(),
+                    site.dev_notice.to_string().into(),
+                    String::new().into(),
                 )
             });
             match state.description {
@@ -226,4 +248,37 @@ pub fn stories() -> Vec<Story> {
     let mut stories = for_site(StorySite::default());
     stories.push(playground());
     stories
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // Set after the bar is built and before it is drawn: words or classes
+    // read once, when it is built, would be the first ones.
+    #[test]
+    fn the_staying_bar_draws_the_notice_and_classes_its_signals_hold() {
+        let html = leptotes::render(|| {
+            let dev_notice = RwSignal::new(String::from("first words"));
+            let class = RwSignal::new(String::from("first"));
+            let bar = staying_bar(
+                RwSignal::new(Snapshot::Dev),
+                Prefix::new("/my-site"),
+                None,
+                dev_notice.into(),
+                class.into(),
+            );
+            dev_notice.set(String::from("later words"));
+            class.set(String::from("later"));
+            bar
+        });
+        assert_eq!(
+            (
+                leptotes::count(&html, "later words"),
+                leptotes::count(&html, r#"class="pyle-version-bar later""#)
+            ),
+            (1, 1),
+            "{html}"
+        );
+    }
 }

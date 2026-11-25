@@ -51,24 +51,32 @@ pub(crate) fn framed(theme: Theme, children: impl IntoView) -> impl IntoView {
     }
 }
 
-/// A whole page as `site` shows it, built from pyle's sections in the order
-/// a site would give them: the page story, and what the theme playground
-/// draws. A section added to pyle joins it here.
+/// A whole page as `site` shows it, under the site's theme: the page story.
+pub(crate) fn sample_page(site: StorySite) -> impl IntoView {
+    view! {
+        <PyleStyles theme=site.theme />
+        {sample_sections(site.prefix, site.dev_notice)}
+    }
+}
+
+/// pyle's sections in the order a site would give them, for a site served
+/// under `prefix` whose bar says `dev_notice` on main's build, with no
+/// stylesheet of their own: what [`sample_page`] and the theme playground
+/// draw. A section added to pyle joins it here.
 ///
 /// The bar starts on an older release, the state that draws with the most
 /// of the theme, and stays in the gallery as [`version_bar_stories`] has it.
-pub(crate) fn sample_page(site: StorySite) -> impl IntoView {
+pub(crate) fn sample_sections(prefix: &'static str, dev_notice: &'static str) -> impl IntoView {
     let older = Version::new(0, 14, 0);
     let newest = Version::new(0, 15, 0);
     let bar = version_bar_stories::staying_bar(
         RwSignal::new(Snapshot::Release(older)),
-        Prefix::new(site.prefix),
+        Prefix::new(prefix),
         Some(Manifest::new([older, newest])),
-        site.dev_notice.to_string(),
-        String::new(),
+        dev_notice.to_string().into(),
+        String::new().into(),
     );
     view! {
-        <PyleStyles theme=site.theme />
         <LandingPage>
             {bar}
             <Hero title="Project name" tagline="What the project does, in a line or two.">
@@ -122,4 +130,21 @@ pub fn stories_for(site: StorySite) -> Stories {
         .chain(version_bar_stories::for_site(site))
         .chain(hero_stories::for_site(site))
         .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::components::test_support::{ONE_LOOK, stylesheets};
+
+    #[test]
+    fn the_page_story_is_styled_by_the_site_s_theme_alone() {
+        let html = leptotes::render(|| {
+            sample_page(StorySite {
+                theme: ONE_LOOK,
+                ..StorySite::default()
+            })
+        });
+        assert_eq!(stylesheets(&html, &ONE_LOOK), (1, 1), "{html}");
+    }
 }

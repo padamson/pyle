@@ -103,8 +103,10 @@ Each field is CSS, so `"#f2d16b"` and `"rgb(36 56 50 / 0.8)"` both work.
 
 To design one, run pyle's gallery (`cargo theoria serve` in a clone, under
 Development below) and open "Theme/Playground". Each control is one
-field. The page redraws as you type, and the block above it is the
-`Theme` as Rust, to paste into the site.
+field: a color for each part of the palette, the radius in rem, and a
+font from a short list (for another, edit the Rust you paste). The
+stylesheet is written again as you edit, and the block above the page is
+the `Theme` as Rust, to paste into the site.
 
 A site with its own theoria gallery shows pyle's components there, under
 the theme it mounts. Turn on pyle's `stories` feature where the site's

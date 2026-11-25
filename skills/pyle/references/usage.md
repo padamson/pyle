@@ -7,7 +7,9 @@ of intent, and the mistake a first use makes.
 
 - `<PyleStyles theme=Theme />`: puts pyle's stylesheet in the page.
   Mount it once, above the first component. `theme` is optional; the
-  default is a plain look that follows the system's light or dark.
+  default is a plain look that follows the system's light or dark. It
+  also takes a `Signal<Theme>`, for a page that changes its look while
+  open: a change writes the stylesheet again and redraws nothing else.
 - `Theme { palette, dark, radius, font }` and `Palette { page, surface,
   surface_strong, border, text, text_muted, accent, accent_hover }`: each
   field is a `&'static str` of CSS, written to `:root` as `--pyle-*`.
@@ -42,8 +44,9 @@ of intent, and the mistake a first use makes.
 ## Designing a theme
 
 - By hand: in a clone of pyle, `cargo theoria serve`, then the story
-  "Theme/Playground" at http://localhost:8081. One control per field; the
-  block above the page is the `Theme` as Rust.
+  "Theme/Playground" at http://localhost:8081. One control per field (a
+  color picker per palette field, the radius in rem, a font from a short
+  list); the block above the page is the `Theme` as Rust.
 - As an agent: write the `Theme` in the site, then check it where the site
   shows it, in the site's theoria gallery (below) or the built site. The
   fields and what draws with each: `page` behind the whole page, with the

@@ -3,7 +3,7 @@ name: pyle
 description: Use when a Leptos landing-page site depends on the pyle crate (a `pyle` git dependency in its `Cargo.toml`), when adding or changing a landing-page component such as the version switcher, a hero, code tabs, or the roadmap, or when a site needs a section pyle does not have yet.
 license: MIT OR Apache-2.0
 metadata:
-  version: "0.4.1"
+  version: "0.5.0"
   internal: true
 ---
 

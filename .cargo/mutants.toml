@@ -38,11 +38,11 @@ examine_globs = ["crates/*/src/**/*.rs"]
 # exclude_globs = ["src/generated/**/*.rs", "src/fakes.rs"]
 #
 # Stories, and the two functions that gather them (gallery.stories.rs),
-# compile only under the `stories` feature, so no test nextest runs builds
-# them. The browser tests in crates/pyle-e2e click through every story of
-# pyle's gallery (`every_story_carries_pyle_s_styles_once` in
-# tests/gallery.rs); `stories_for`'s doctest checks what a site's gallery
-# gets.
+# compile only under the `stories` feature and in test builds, and they
+# are the gallery's code, not a site's, so they are not mutated. The browser tests in crates/pyle-e2e
+# click through every story of pyle's gallery
+# (`every_story_carries_pyle_s_styles_once` in tests/gallery.rs);
+# `stories_for`'s doctest checks what a site's gallery gets.
 #
 # pyle's landing page (crates/site) is one `main` and the components it
 # mounts, which run only in a browser; the site tests in crates/pyle-e2e

@@ -43,7 +43,7 @@ pub use versions::{Notice, VersionOption, notice, version_options};
 
 /// Every component's stories, for pyle's own theoria gallery
 /// (`theoria.toml`).
-#[cfg(feature = "stories")]
+#[cfg(any(test, feature = "stories"))]
 pub use components::stories as all_stories;
-#[cfg(feature = "stories")]
+#[cfg(any(test, feature = "stories"))]
 pub use components::{StorySite, stories_for};

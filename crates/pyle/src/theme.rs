@@ -5,7 +5,7 @@ use leptos::prelude::*;
 
 use crate::components;
 
-#[cfg(feature = "stories")]
+#[cfg(any(test, feature = "stories"))]
 #[path = "theme.stories.rs"]
 pub(crate) mod stories;
 
@@ -133,36 +133,19 @@ pub fn stylesheet(theme: &Theme) -> String {
 /// the order before this component runs (the README shows the line).
 #[component]
 pub fn PyleStyles(
-    /// The site's look; the default is a plain one.
-    #[prop(optional)]
-    theme: Theme,
+    /// The site's look; the default is a plain one. A `Theme` or a signal
+    /// of one: when the signal changes, the stylesheet is written again and
+    /// nothing else on the page is redrawn.
+    #[prop(optional, into)]
+    theme: Signal<Theme>,
 ) -> impl IntoView {
-    view! { <style id="pyle-styles" inner_html=stylesheet(&theme)></style> }
+    view! { <style id="pyle-styles" inner_html=move || stylesheet(&theme.get())></style> }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    const PLAIN: Palette = Palette {
-        page: "p",
-        surface: "s",
-        surface_strong: "ss",
-        border: "b",
-        text: "t",
-        text_muted: "tm",
-        accent: "a",
-        accent_hover: "ah",
-    };
-
-    fn one_look() -> Theme {
-        Theme {
-            palette: PLAIN,
-            dark: None,
-            radius: "2px",
-            font: "serif",
-        }
-    }
+    use crate::components::test_support::{ONE_LOOK, PLAIN, styles_of};
 
     /// The text between the first `{` and the last `}`: what the outermost
     /// block holds.
@@ -248,7 +231,7 @@ mod tests {
 
     #[test]
     fn every_variable_a_rule_reads_is_one_the_theme_sets() {
-        let css = stylesheet(&one_look());
+        let css = stylesheet(&ONE_LOOK);
         let unset: Vec<&str> = css
             .split("var(")
             .skip(1)
@@ -271,7 +254,7 @@ mod tests {
 
     #[test]
     fn the_radius_and_font_are_root_variables() {
-        let css = stylesheet(&one_look());
+        let css = stylesheet(&ONE_LOOK);
         assert!(
             css.contains("  --pyle-radius: 2px;\n  --pyle-font: serif;\n}\n"),
             "{css}"
@@ -281,7 +264,7 @@ mod tests {
     // Neither the system's query nor a scheme for the browser's own parts.
     #[test]
     fn a_theme_with_one_look_asks_nothing_of_the_system() {
-        let css = stylesheet(&one_look());
+        let css = stylesheet(&ONE_LOOK);
         assert_eq!(leptotes::count(&css, "color-scheme"), 0, "{css}");
     }
 
@@ -293,7 +276,7 @@ mod tests {
     fn a_theme_with_a_dark_palette_lets_the_browser_s_parts_follow_the_system() {
         let css = stylesheet(&Theme {
             dark: Some(PLAIN),
-            ..one_look()
+            ..ONE_LOOK
         });
         assert_eq!(
             leptotes::count(
@@ -316,7 +299,7 @@ mod tests {
         };
         let css = stylesheet(&Theme {
             dark: Some(dark),
-            ..one_look()
+            ..ONE_LOOK
         });
         let light = css.find("  --pyle-surface: s;\n");
         let dark =
@@ -324,15 +307,28 @@ mod tests {
         assert!(light.is_some() && light < dark, "{css}");
     }
 
+    // Set after the view is built and before it is drawn: a stylesheet
+    // written once, when the view is built, would hold the default.
+    #[test]
+    fn the_stylesheet_is_read_from_the_theme_signal_when_drawn() {
+        let html = leptotes::render(|| {
+            let theme = RwSignal::new(Theme::default());
+            let view = view! { <PyleStyles theme /> };
+            theme.set(ONE_LOOK);
+            view
+        });
+        assert_eq!(html, styles_of(&ONE_LOOK));
+    }
+
+    #[test]
+    fn the_styles_component_with_no_theme_carries_the_default_stylesheet() {
+        let html = leptotes::render(|| view! { <PyleStyles /> });
+        assert_eq!(html, styles_of(&Theme::default()));
+    }
+
     #[test]
     fn the_styles_component_carries_the_theme_s_stylesheet() {
-        let html = leptotes::render(|| view! { <PyleStyles theme=one_look() /> });
-        assert_eq!(
-            html,
-            format!(
-                r#"<style id="pyle-styles">{}</style>"#,
-                stylesheet(&one_look())
-            )
-        );
+        let html = leptotes::render(|| view! { <PyleStyles theme=ONE_LOOK /> });
+        assert_eq!(html, styles_of(&ONE_LOOK));
     }
 }

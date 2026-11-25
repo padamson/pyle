@@ -29,6 +29,9 @@ theoria = { workspace = true, optional = true }
 [dev-dependencies]
 # Renders a component to its SSR HTML in a plain test.
 leptotes = { workspace = true }
+# The stories compile in every test build too, so the leptotes tests in
+# the `*.stories.rs` files run under a plain `cargo nextest run`.
+theoria = { workspace = true }
 
 [features]
 csr = ["leptos/csr", "theoria?/csr"]

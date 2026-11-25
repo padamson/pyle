@@ -221,11 +221,13 @@ missing.
 A component's claims go to the cheapest test that can hold them. What
 the component decides is a plain function with unit tests
 (`versions.rs`). What its first render holds is a leptotes test
-(`<name>.tests.rs`). What the browser decides (the cascade, a fetch, a
-navigation, anything after the first render) is a test in
-`crates/pyle-e2e`: against pyle's own site when a real deploy shows it,
-against a static page for the cascade, and against a story only for what
-the gallery itself does. Every design decision about the components gets
+(`<name>.tests.rs`), and what a story helper or a playground draws first
+is one in a `tests` module of its `.stories.rs` (the stories compile in
+every test build, with theoria as a dev-dependency). What the browser
+decides (the cascade, a fetch, a navigation, anything after the first
+render) is a test in `crates/pyle-e2e`: against pyle's own site when a
+real deploy shows it, against a static page for the cascade, and against
+a story only for what the gallery itself does. Every design decision about the components gets
 its test here, not in a site. A site's theme is the
 site's decision, so no story here copies one: the gallery shows the
 default theme and the theme playground, and a site shows the components

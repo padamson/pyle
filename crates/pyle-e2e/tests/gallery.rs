@@ -42,7 +42,14 @@ async fn with_gallery(body: impl AsyncFnOnce(&Page, &str) -> Result<()>) -> Resu
 
 /// Shows the story whose sidebar entry reads `leaf`, the part of its name
 /// after the last `/`, and waits for the sidebar to mark it, so that what a
-/// test reads next is not the story shown before.
+/// test reads next is not the story shown before. The only place a test
+/// selects a story.
+///
+/// Two stories share the leaf "Playground" ("Theme/Playground" and
+/// "Version bar/Playground"), so neither can be shown here. Their tests
+/// (an edit to the theme writes the stylesheet again and redraws nothing
+/// else; an edit to the bar's notice keeps the version picked in it) wait
+/// for theoria to select a story by its full name.
 async fn show(page: &Page, leaf: &str) -> Result<()> {
     page.locator(".theoria-nav")
         .get_by_text(leaf, true)
