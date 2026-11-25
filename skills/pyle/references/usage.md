@@ -41,7 +41,7 @@ of intent, and the mistake a first use makes.
 
 ## Designing a theme
 
-- By hand: in a clone of pyle, `./scripts/gallery.sh serve`, then the story
+- By hand: in a clone of pyle, `cargo theoria serve`, then the story
   "Theme/Playground" at http://localhost:8081. One control per field; the
   block above the page is the `Theme` as Rust.
 - As an agent: write the `Theme` in the site, then check it where the site

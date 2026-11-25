@@ -1,0 +1,16 @@
+# The theoria CLI, built here so that it comes from the theoria commit
+# Cargo.lock records for the stories: `cargo theoria serve` and `cargo
+# theoria build` (the alias is in .cargo/config.toml).
+[package]
+name = "gallery"
+version = "0.0.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+theoria-cli.workspace = true
+
+[lints]
+workspace = true

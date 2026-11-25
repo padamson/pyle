@@ -1,5 +1,8 @@
 [workspace]
-members = ["crates/*"]
+# `tools/gallery` builds the theoria CLI for `cargo theoria`.
+members = ["crates/*", "tools/*"]
+# A plain `cargo build` leaves the CLI out; `cargo theoria` names it.
+default-members = ["crates/*"]
 # The browser tests: their own lockfile and their own CI job, so the
 # workspace builds without playwright-rs or a browser.
 exclude = ["crates/pyle-e2e"]
@@ -33,3 +36,5 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tempfile = "3"
 theoria = { git = "https://github.com/padamson/theoria", branch = "main" }
+# The same `git` and `branch` as `theoria`, so the two lock to one commit.
+theoria-cli = { git = "https://github.com/padamson/theoria", branch = "main" }

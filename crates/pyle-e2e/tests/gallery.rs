@@ -6,7 +6,7 @@
 //! and fails, naming the build command, when run without the gallery.
 //! Install the browser once, build the gallery, then run:
 //!   cargo run --manifest-path crates/pyle-e2e/Cargo.toml --example install-browsers
-//!   ./scripts/gallery.sh build
+//!   cargo theoria build
 //!   cargo nextest run --manifest-path crates/pyle-e2e/Cargo.toml --config-file .config/nextest.toml --run-ignored all
 
 mod common;
@@ -23,7 +23,7 @@ async fn with_gallery(body: impl AsyncFnOnce(&Page, &str) -> Result<()>) -> Resu
     let gallery = common::target_dir().join("theoria/gallery/pyle/dist");
     ensure!(
         gallery.join("index.html").exists(),
-        "{} not built; run ./scripts/gallery.sh build",
+        "{} not built; run cargo theoria build",
         gallery.display()
     );
     let origin = common::serve(Router::new().fallback_service(ServeDir::new(&gallery))).await?;
@@ -56,7 +56,7 @@ async fn show(page: &Page, leaf: &str) -> Result<()> {
 }
 
 #[tokio::test]
-#[ignore = "needs the built gallery and Chromium; run with --run-ignored all after ./scripts/gallery.sh build"]
+#[ignore = "needs the built gallery and Chromium; run with --run-ignored all after cargo theoria build"]
 async fn every_story_carries_pyle_s_styles_once() -> Result<()> {
     with_gallery(async |page: &Page, _| {
         let entries = page
@@ -82,7 +82,7 @@ async fn every_story_carries_pyle_s_styles_once() -> Result<()> {
 }
 
 #[tokio::test]
-#[ignore = "needs the built gallery and Chromium; run with --run-ignored all after ./scripts/gallery.sh build"]
+#[ignore = "needs the built gallery and Chromium; run with --run-ignored all after cargo theoria build"]
 async fn a_story_draws_the_bar_of_the_release_a_visitor_picks_and_stays() -> Result<()> {
     with_gallery(async |page: &Page, origin: &str| {
         show(page, "On an older release").await?;
@@ -109,7 +109,7 @@ async fn a_story_draws_the_bar_of_the_release_a_visitor_picks_and_stays() -> Res
 /// The page story's bar is the same one: its notice links to an address
 /// the gallery does not serve.
 #[tokio::test]
-#[ignore = "needs the built gallery and Chromium; run with --run-ignored all after ./scripts/gallery.sh build"]
+#[ignore = "needs the built gallery and Chromium; run with --run-ignored all after cargo theoria build"]
 async fn following_the_notice_s_link_in_the_page_story_stays_in_the_gallery() -> Result<()> {
     with_gallery(async |page: &Page, origin: &str| {
         show(page, "A page from pyle's sections").await?;

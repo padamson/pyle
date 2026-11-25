@@ -1,0 +1,3 @@
+[alias]
+# The theoria CLI at the commit Cargo.lock records (tools/gallery).
+theoria = "run --locked -q -p gallery --"

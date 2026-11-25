@@ -101,7 +101,7 @@ optional second palette for visitors whose system asks for dark, a corner
 radius, and a font stack.
 Each field is CSS, so `"#f2d16b"` and `"rgb(36 56 50 / 0.8)"` both work.
 
-To design one, run pyle's gallery (`./scripts/gallery.sh serve` in a clone, under
+To design one, run pyle's gallery (`cargo theoria serve` in a clone, under
 Development below) and open "Theme/Playground". Each control is one
 field. The page redraws as you type, and the block above it is the
 `Theme` as Rust, to paste into the site.
@@ -167,15 +167,17 @@ See [CLAUDE.md](CLAUDE.md) for development commands.
 ```bash
 cargo build
 cargo nextest run
-./scripts/gallery.sh serve   # the component gallery, http://localhost:8081
+cargo theoria serve   # the component gallery, http://localhost:8081
 (cd crates/site && trunk serve)  # pyle's own landing page, http://localhost:8080
 ```
 
-The script runs the [theoria](https://github.com/padamson/theoria) CLI on
-the dependencies `Cargo.lock` pins; the gallery also needs the `wasm32-unknown-unknown` target and
-[Trunk](https://trunkrs.dev). The browser tests in `crates/pyle-e2e`
-drive the gallery and pyle's own landing page in Chromium, each built
-first; [CLAUDE.md](CLAUDE.md) has the commands.
+`cargo theoria` builds the [theoria](https://github.com/padamson/theoria)
+CLI in the workspace (`tools/gallery`), from the theoria commit
+`Cargo.lock` pins, and runs it. Run it from the repository's root, where
+`theoria.toml` is. The gallery also needs the `wasm32-unknown-unknown`
+target and [Trunk](https://trunkrs.dev). The browser tests in
+`crates/pyle-e2e` drive the gallery and pyle's own landing page in
+Chromium, each built first; [CLAUDE.md](CLAUDE.md) has the commands.
 
 ## License
 

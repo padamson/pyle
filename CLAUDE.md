@@ -31,6 +31,9 @@ The workspace has one crate per job:
   snapshot it is (`dev` when unset), checked when it builds. Its `csr`
   feature is on in Trunk's build and off in a plain workspace build, so
   `cargo nextest run` tests pyle with no Leptos runtime turned on.
+- `tools/gallery`: the theoria CLI, built in the workspace so it comes
+  from the theoria commit `Cargo.lock` holds for the stories. `cargo
+  theoria` (an alias in `.cargo/config.toml`) runs it.
 
 `crates/pyle-e2e` sits outside the workspace with its own `Cargo.lock`:
 the browser tests, which drive Chromium with playwright-rs. `site.rs`
@@ -50,7 +53,7 @@ cargo fmt                # format
 cargo deny --workspace check bans licenses sources  # licenses, bans, sources
 prek run cargo-lockpatrol --all-files  # advisories in every tracked Cargo.lock (ignore list: deny.toml)
 cargo vet                # supply chain review
-./scripts/gallery.sh serve  # the component gallery, http://localhost:8081
+cargo theoria serve      # the component gallery, http://localhost:8081
 (cd crates/site && trunk serve)  # pyle's landing page, http://localhost:8080
 ```
 
@@ -58,7 +61,7 @@ The browser tests need the built gallery, the built site, and Chromium:
 
 ```bash
 cargo run --manifest-path crates/pyle-e2e/Cargo.toml --example install-browsers  # once
-./scripts/gallery.sh build
+cargo theoria build
 ./scripts/site.sh        # target/site/dev, v0.1.0, and v0.2.0
 cargo nextest run --manifest-path crates/pyle-e2e/Cargo.toml --config-file .config/nextest.toml --run-ignored all
 ```
@@ -122,7 +125,7 @@ what a pass looks like; CI is the backstop, not the plan.
   (SETUP.md, "GitHub settings", lists what it sets). A pass is exit 0
   with only `ok` and `manual` lines. A session never runs it: these are admin
   changes, and its `gh` calls fail in the sandbox on purpose.
-- The gallery, for a new or restyled component: `./scripts/gallery.sh serve`, then
+- The gallery, for a new or restyled component: `cargo theoria serve`, then
   each of its stories at http://localhost:8081. A session can start the
   server but cannot look at the page.
 - pyle's landing page, for a change to it or to a component on it:

@@ -220,24 +220,12 @@ jobs:
           tool: trunk,cargo-nextest
           fallback: none
 
-      # The CLI is built from the theoria commit Cargo.lock holds for the
-      # stories, so Dependabot's cargo entry moves it with the library.
-      # `--force` because the cache step may have restored an older one to
-      # ~/.cargo/bin.
-      - name: Install the theoria CLI at the locked commit
-        run: |
-          sha=$(sed -n 's|^source = "git+https://github.com/padamson/theoria?branch=main#\(.*\)"$|\1|p' Cargo.lock | head -n 1)
-          if [ -z "$sha" ]; then
-            echo "::error::Cargo.lock has no theoria commit"
-            exit 1
-          fi
-          cargo install --locked --force --git https://github.com/padamson/theoria --rev "$sha" theoria-cli
-
-      # The script starts the generated app from the workspace's lockfile,
-      # so the gallery is built on what Cargo.lock pins and not on
-      # theoria's `main` as of the run (scripts/gallery.sh says why).
+      # `cargo theoria` builds the CLI in the workspace (tools/gallery), from
+      # the theoria commit Cargo.lock holds for the stories, so Dependabot's
+      # cargo entry moves both together. The CLI builds the gallery on that
+      # same lockfile.
       - name: Build the gallery
-        run: ./scripts/gallery.sh build
+        run: cargo theoria build
 
       # The snapshots the site tests deploy: main's build and two releases.
       - name: Build pyle's landing page

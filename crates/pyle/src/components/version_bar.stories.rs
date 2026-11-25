@@ -28,9 +28,9 @@ struct State {
     current: Snapshot,
     /// The manifest the bar has read by then.
     manifest: Option<Manifest>,
-    /// What the story says under the bar, for a state the bar alone does
-    /// not explain.
-    caption: Option<&'static str>,
+    /// The story's description, for a state the bar alone does not
+    /// explain.
+    description: Option<&'static str>,
 }
 
 fn states() -> [State; 5] {
@@ -40,36 +40,36 @@ fn states() -> [State; 5] {
             name: "Version bar/On main, with a release to go to",
             current: Snapshot::Dev,
             manifest: releases(),
-            caption: None,
+            description: None,
         },
         State {
             name: "Version bar/On main, before the first release",
             current: Snapshot::Dev,
             manifest: Some(Manifest::default()),
-            caption: None,
+            description: None,
         },
         State {
             name: "Version bar/On an older release",
             current: Snapshot::Release(V13),
             manifest: releases(),
-            caption: None,
+            description: None,
         },
         State {
             name: "Version bar/On the newest release",
             current: Snapshot::Release(V15),
             manifest: releases(),
-            caption: None,
+            description: None,
         },
         State {
             name: "Version bar/Without the manifest",
             current: Snapshot::Release(V14),
             manifest: None,
-            caption: Some(
-                "The bar on v0.14.0 before the site's versions.json has loaded, and \
-                 for good when it cannot be: a local preview, a site with nothing \
-                 deployed, a failed fetch. It knows only main's build and this one, \
-                 so it lists those two, and it shows no notice, since it cannot tell \
-                 whether a newer release exists.",
+            description: Some(
+                "The story starts on v0.14.0, as the bar is before the site's \
+                 `versions.json` has loaded, and for good when it cannot be: a local \
+                 preview, a site with nothing deployed, a failed fetch. The bar knows \
+                 only main's build and its own, so it lists those two, and it shows \
+                 no notice, since it cannot tell whether a newer release exists.",
             ),
         },
     ]
@@ -133,7 +133,6 @@ fn on_site(
     manifest: Option<Manifest>,
     dev_notice: String,
     class: String,
-    caption: Option<&'static str>,
 ) -> impl IntoView {
     let prefix = Prefix::new(site.prefix);
     // The build whose bar is on show: the story's, until a pick or the link.
@@ -156,7 +155,6 @@ fn on_site(
             {staying_bar(shown, prefix, manifest, dev_notice, class)}
             <p style="padding: 1rem 1.5rem; font: 0.875rem ui-monospace, monospace; color: GrayText">
                 <span class="story-lands">{landed}</span>
-                {move || (!moved()).then_some(caption).flatten()}
                 <Show when=moved>
                     " "
                     <button on:click=move |_| shown.set(current)>"Back to the story's build"</button>
@@ -193,7 +191,7 @@ fn playground(current: String, newest: String, dev_notice: String, class: String
     match current.parse::<Snapshot>() {
         Ok(current) => {
             let manifest = Manifest::new(newest.parse::<Version>().ok());
-            on_site(site, current, Some(manifest), dev_notice, class, None).into_any()
+            on_site(site, current, Some(manifest), dev_notice, class).into_any()
         }
         Err(err) => view! { <p>{err.to_string()}</p> }.into_any(),
     }
@@ -205,16 +203,19 @@ pub fn for_site(site: StorySite) -> Vec<Story> {
     states()
         .into_iter()
         .map(|state| {
-            Story::new(state.name, move || {
+            let story = Story::new(state.name, move || {
                 on_site(
                     site,
                     state.current,
                     state.manifest.clone(),
                     site.dev_notice.to_string(),
                     String::new(),
-                    state.caption,
                 )
-            })
+            });
+            match state.description {
+                Some(description) => story.with_description(description),
+                None => story,
+            }
         })
         .collect()
 }
