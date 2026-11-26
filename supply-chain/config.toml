@@ -94,12 +94,28 @@ criteria = "safe-to-deploy"
 version = "1.7.0"
 criteria = "safe-to-deploy"
 
+[[exemptions.derive_more]]
+version = "2.1.1"
+criteria = "safe-to-deploy"
+
+[[exemptions.derive_more-impl]]
+version = "2.1.1"
+criteria = "safe-to-deploy"
+
 [[exemptions.digest]]
 version = "0.10.7"
 criteria = "safe-to-deploy"
 
 [[exemptions.drain_filter_polyfill]]
 version = "0.1.3"
+criteria = "safe-to-deploy"
+
+[[exemptions.dtoa-short]]
+version = "0.3.5"
+criteria = "safe-to-deploy"
+
+[[exemptions.ego-tree]]
+version = "0.11.1"
 criteria = "safe-to-deploy"
 
 [[exemptions.either_of]]
@@ -136,6 +152,10 @@ criteria = "safe-to-deploy"
 
 [[exemptions.html-escape]]
 version = "0.2.15"
+criteria = "safe-to-deploy"
+
+[[exemptions.html5ever]]
+version = "0.40.1"
 criteria = "safe-to-deploy"
 
 [[exemptions.hydration_context]]
@@ -194,12 +214,20 @@ criteria = "safe-to-deploy"
 version = "0.8.3"
 criteria = "safe-to-deploy"
 
+[[exemptions.log]]
+version = "0.4.35"
+criteria = "safe-to-deploy"
+
 [[exemptions.manyhow]]
 version = "0.14.1"
 criteria = "safe-to-deploy"
 
 [[exemptions.manyhow-macros]]
 version = "0.14.1"
+criteria = "safe-to-deploy"
+
+[[exemptions.markup5ever]]
+version = "0.40.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.next_tuple]]
@@ -212,6 +240,26 @@ criteria = "safe-to-deploy"
 
 [[exemptions.or_poisoned]]
 version = "0.1.0"
+criteria = "safe-to-deploy"
+
+[[exemptions.phf]]
+version = "0.14.0"
+criteria = "safe-to-deploy"
+
+[[exemptions.phf_codegen]]
+version = "0.14.0"
+criteria = "safe-to-deploy"
+
+[[exemptions.phf_generator]]
+version = "0.14.0"
+criteria = "safe-to-deploy"
+
+[[exemptions.phf_macros]]
+version = "0.14.0"
+criteria = "safe-to-deploy"
+
+[[exemptions.phf_shared]]
+version = "0.14.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.pin-project]]
@@ -270,12 +318,24 @@ criteria = "safe-to-deploy"
 version = "0.4.4"
 criteria = "safe-to-deploy"
 
+[[exemptions.redox_syscall]]
+version = "0.5.18"
+criteria = "safe-to-deploy"
+
 [[exemptions.rstml]]
 version = "0.13.1"
 criteria = "safe-to-deploy"
 
 [[exemptions.rustc-hash]]
 version = "2.1.3"
+criteria = "safe-to-deploy"
+
+[[exemptions.scraper]]
+version = "0.29.0"
+criteria = "safe-to-deploy"
+
+[[exemptions.selectors]]
+version = "0.41.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.send_wrapper]]
@@ -298,6 +358,14 @@ criteria = "safe-to-deploy"
 version = "0.8.6"
 criteria = "safe-to-deploy"
 
+[[exemptions.servo_arc]]
+version = "0.5.0"
+criteria = "safe-to-deploy"
+
+[[exemptions.siphasher]]
+version = "1.0.4"
+criteria = "safe-to-deploy"
+
 [[exemptions.slotmap]]
 version = "1.1.1"
 criteria = "safe-to-deploy"
@@ -310,12 +378,24 @@ criteria = "safe-to-deploy"
 version = "1.2.1"
 criteria = "safe-to-deploy"
 
+[[exemptions.string_cache]]
+version = "0.11.0"
+criteria = "safe-to-deploy"
+
+[[exemptions.string_cache_codegen]]
+version = "0.11.2"
+criteria = "safe-to-deploy"
+
 [[exemptions.synstructure]]
 version = "0.14.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.tachys]]
 version = "0.2.19"
+criteria = "safe-to-deploy"
+
+[[exemptions.tendril]]
+version = "0.5.1"
 criteria = "safe-to-deploy"
 
 [[exemptions.throw_error]]
@@ -372,6 +452,10 @@ criteria = "safe-to-deploy"
 
 [[exemptions.web-sys]]
 version = "0.3.107"
+criteria = "safe-to-deploy"
+
+[[exemptions.web_atoms]]
+version = "0.3.0"
 criteria = "safe-to-deploy"
 
 [[exemptions.writeable]]
