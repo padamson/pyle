@@ -29,6 +29,16 @@ updates:
       semver-major-days: 14
       semver-minor-days: 7
       semver-patch-days: 3
+    # pyle stays on the gloo-net and html-escape that leptos depends on.
+    # A newer major sits beside leptos's copy in every site's tree, buys
+    # pyle nothing (it uses one request and three escape functions), and
+    # needs a delta audit, since neither publisher is trusted. When a leptos
+    # bump moves either crate, delete its entry and take the same major.
+    ignore:
+      - dependency-name: "gloo-net"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "html-escape"
+        update-types: ["version-update:semver-major"]
     # Grouping keeps the weekly run to as few PRs as possible. Every cargo PR
     # edits Cargo.lock, so two open cargo PRs conflict the moment one merges
     # and the second must rebase and re-run CI; with N PRs the auto-merge
