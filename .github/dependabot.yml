@@ -53,6 +53,7 @@ updates:
         patterns:
           - "leptotes"
           - "theoria"
+          - "theoria-cli"
           - "theoria-macros"
       minor-and-patch:
         patterns:
