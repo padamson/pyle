@@ -353,7 +353,7 @@ end = "2027-11-17"
 
 [[trusted.new_debug_unreachable]]
 criteria = "safe-to-deploy"
-user-id = 2017
+user-id = 2017 # Matt Brubeck (mbrubeck)
 start = "2019-02-26"
 end = "2027-11-26"
 
@@ -497,7 +497,7 @@ end = "2027-11-17"
 
 [[trusted.smallvec]]
 criteria = "safe-to-deploy"
-user-id = 2017
+user-id = 2017 # Matt Brubeck (mbrubeck)
 start = "2019-10-28"
 end = "2027-11-17"
 
