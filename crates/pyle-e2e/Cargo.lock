@@ -1637,7 +1637,7 @@ checksum = "f6b464fbc74e149a392436b17d523f769e057cb6877f6a5c4618bc6f11800548"
 [[package]]
 name = "playwright-rs"
 version = "0.21.1"
-source = "git+https://github.com/padamson/playwright-rust?branch=main#3257ec0f0cf5d8da326efade92434cecd302e4c8"
+source = "git+https://github.com/padamson/playwright-rust?branch=main#e1addc9b16156252b69f9e922f48d4739dd80c43"
 dependencies = [
  "async-trait",
  "base64 0.23.1",
@@ -1670,7 +1670,7 @@ dependencies = [
 [[package]]
 name = "playwright-rs-macros"
 version = "0.1.2"
-source = "git+https://github.com/padamson/playwright-rust?branch=main#3257ec0f0cf5d8da326efade92434cecd302e4c8"
+source = "git+https://github.com/padamson/playwright-rust?branch=main#e1addc9b16156252b69f9e922f48d4739dd80c43"
 dependencies = [
  "proc-macro2",
  "quote",
