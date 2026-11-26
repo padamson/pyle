@@ -182,6 +182,14 @@ fn message(note: &Notice, dev_notice: &str) -> String {
     }
 }
 
+/// The bar, for the tests and the stories' tests to find it by.
+#[cfg(test)]
+pub(crate) const BAR: &str = "#version-switcher";
+
+/// The notice's words, without its link.
+#[cfg(test)]
+pub(crate) const NOTICE_WORDS: &str = ".pyle-version-notice > span";
+
 #[cfg(test)]
 #[path = "version_bar.tests.rs"]
 mod tests;

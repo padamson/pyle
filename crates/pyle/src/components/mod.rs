@@ -24,6 +24,8 @@ fn classes(own: &str, extra: &str) -> String {
 pub(crate) mod test_support {
     use std::collections::BTreeSet;
 
+    use leptotes::Dom;
+
     use crate::{Palette, Theme};
 
     /// A palette unlike the default's in every color.
@@ -63,15 +65,14 @@ pub(crate) mod test_support {
         )
     }
 
-    /// Every class `html` carries that has no rule in pyle's stylesheet. A
+    /// Every class an element of `dom` carries that has no rule in pyle's stylesheet. A
     /// class renamed in a component and not in its rules leaves that part
     /// unstyled, and no other native test would say so.
-    pub(crate) fn unruled_classes(html: &str) -> Vec<String> {
+    pub(crate) fn unruled_classes(dom: &Dom) -> Vec<String> {
         let css = crate::stylesheet(&crate::Theme::default());
-        let classes: BTreeSet<&str> = html
-            .split("class=\"")
-            .skip(1)
-            .filter_map(|rest| rest.split('"').next())
+        let classes: BTreeSet<&str> = dom
+            .attrs("[class]", "class")
+            .into_iter()
             .flat_map(str::split_whitespace)
             .collect();
         classes

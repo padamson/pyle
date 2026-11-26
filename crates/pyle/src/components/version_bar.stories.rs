@@ -253,12 +253,13 @@ pub fn stories() -> Vec<Story> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::components::version_bar::{BAR, NOTICE_WORDS};
 
     // Set after the bar is built and before it is drawn: words or classes
     // read once, when it is built, would be the first ones.
     #[test]
     fn the_staying_bar_draws_the_notice_and_classes_its_signals_hold() {
-        let html = leptotes::render(|| {
+        let dom = leptotes::dom(|| {
             let dev_notice = RwSignal::new(String::from("first words"));
             let class = RwSignal::new(String::from("first"));
             let bar = staying_bar(
@@ -273,12 +274,9 @@ mod tests {
             bar
         });
         assert_eq!(
-            (
-                leptotes::count(&html, "later words"),
-                leptotes::count(&html, r#"class="pyle-version-bar later""#)
-            ),
-            (1, 1),
-            "{html}"
+            (dom.find(NOTICE_WORDS).text(), dom.find(BAR).attr("class")),
+            (String::from("later words"), Some("pyle-version-bar later")),
+            "{dom}"
         );
     }
 }
