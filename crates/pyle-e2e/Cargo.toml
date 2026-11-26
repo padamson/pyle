@@ -25,4 +25,6 @@ tokio = { version = "1", features = ["full"] }
 axum = "0.8"
 tower-http = { version = "0.7", features = ["fs"] }
 anyhow = "1"
+# A story's name as the gallery's `?story=` link writes it.
+form_urlencoded = "1"
 tempfile = "3"

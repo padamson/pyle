@@ -1653,9 +1653,10 @@ dependencies = [
 [[package]]
 name = "theoria"
 version = "0.1.0"
-source = "git+https://github.com/padamson/theoria?branch=main#02bca4699c2099be6ed97244cd7e4e9c1fb5b9e4"
+source = "git+https://github.com/padamson/theoria?branch=main#8269596904f10a1babacb45c03e5ac5215b40d4b"
 dependencies = [
  "console_error_panic_hook",
+ "form_urlencoded",
  "leptos",
  "pulldown-cmark",
  "theoria-macros",
@@ -1665,7 +1666,7 @@ dependencies = [
 [[package]]
 name = "theoria-cli"
 version = "0.1.0"
-source = "git+https://github.com/padamson/theoria?branch=main#02bca4699c2099be6ed97244cd7e4e9c1fb5b9e4"
+source = "git+https://github.com/padamson/theoria?branch=main#8269596904f10a1babacb45c03e5ac5215b40d4b"
 dependencies = [
  "anyhow",
  "clap",
@@ -1676,7 +1677,7 @@ dependencies = [
 [[package]]
 name = "theoria-macros"
 version = "0.1.0"
-source = "git+https://github.com/padamson/theoria?branch=main#02bca4699c2099be6ed97244cd7e4e9c1fb5b9e4"
+source = "git+https://github.com/padamson/theoria?branch=main#8269596904f10a1babacb45c03e5ac5215b40d4b"
 dependencies = [
  "proc-macro2",
  "quote",

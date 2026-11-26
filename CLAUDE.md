@@ -40,7 +40,8 @@ the browser tests, which drive Chromium with playwright-rs. `site.rs`
 deploys the site's snapshots with pyle-cli and tests them, `layers.rs`
 tests the cascade between a site's stylesheet and pyle's on static pages
 (two of them built by Tailwind and committed under `tests/fixtures/`), and
-`gallery.rs` checks that every story renders with pyle's styles.
+`gallery.rs` checks that every story renders with pyle's styles and
+what an edit in each playground redraws.
 
 ## Development
 
