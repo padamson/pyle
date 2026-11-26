@@ -104,7 +104,7 @@ jobs:
       # install --locked` (and `--force` after a cache step that restores
       # `~/.cargo/bin`) rather than delete the line.
       - name: Install cargo-semver-checks
-        uses: taiki-e/install-action@4a76afe23f9e08d2d9550fb56e556444e8611d21 # v2.90.4
+        uses: taiki-e/install-action@75a7c0f87bd666af3cdb75c5b9e9d03ab6044e6f # v2.90.6
         with:
           tool: cargo-semver-checks
           fallback: none
@@ -190,7 +190,7 @@ jobs:
           shared-key: release-${{ matrix.target }}
 
       - name: Install cargo-nextest
-        uses: taiki-e/install-action@4a76afe23f9e08d2d9550fb56e556444e8611d21 # v2.90.4
+        uses: taiki-e/install-action@75a7c0f87bd666af3cdb75c5b9e9d03ab6044e6f # v2.90.6
         with:
           tool: cargo-nextest
           fallback: none
@@ -242,7 +242,7 @@ jobs:
   supply-chain-gates:
     name: Supply-chain gates
     needs: [release-refs]
-    uses: padamson/rust-ci-workflows/.github/workflows/supply-chain.yml@bc82a9327da289a29ae5f0c32b0cd94786e0d1f9 # v0.1.0
+    uses: padamson/rust-ci-workflows/.github/workflows/supply-chain.yml@07d9be408f21f565a66488d6931b1a39b3f872e0 # v0.2.0
 
   publish-crates:
     name: Publish to crates.io
@@ -325,7 +325,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Install parse-changelog
-        uses: taiki-e/install-action@4a76afe23f9e08d2d9550fb56e556444e8611d21 # v2.90.4
+        uses: taiki-e/install-action@75a7c0f87bd666af3cdb75c5b9e9d03ab6044e6f # v2.90.6
         with:
           tool: parse-changelog
           fallback: none

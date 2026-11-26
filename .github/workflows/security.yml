@@ -33,14 +33,14 @@ permissions:
 
 jobs:
   supply-chain:
-    uses: padamson/rust-ci-workflows/.github/workflows/supply-chain.yml@bc82a9327da289a29ae5f0c32b0cd94786e0d1f9 # v0.1.0
+    uses: padamson/rust-ci-workflows/.github/workflows/supply-chain.yml@07d9be408f21f565a66488d6931b1a39b3f872e0 # v0.2.0
 
   semver-preview:
-    uses: padamson/rust-ci-workflows/.github/workflows/semver-preview.yml@bc82a9327da289a29ae5f0c32b0cd94786e0d1f9 # v0.1.0
+    uses: padamson/rust-ci-workflows/.github/workflows/semver-preview.yml@07d9be408f21f565a66488d6931b1a39b3f872e0 # v0.2.0
 
   # The full sweep outgrows a job's timeout, so the schedule skips it. CI
   # does not run `scripts/mutants.sh`: its pre-setup stubs go in `with:
   # setup:` here.
   mutation:
     if: github.event_name != 'schedule'
-    uses: padamson/rust-ci-workflows/.github/workflows/mutation.yml@bc82a9327da289a29ae5f0c32b0cd94786e0d1f9 # v0.1.0
+    uses: padamson/rust-ci-workflows/.github/workflows/mutation.yml@07d9be408f21f565a66488d6931b1a39b3f872e0 # v0.2.0
