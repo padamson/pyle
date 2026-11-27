@@ -263,16 +263,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "console_error_panic_hook"
-version = "0.1.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a06aeb73f470f66dcdbf7223caeebb85984942f22f1adb2a088cf9668146bbbc"
-dependencies = [
- "cfg-if",
- "wasm-bindgen",
-]
-
-[[package]]
 name = "const-str"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1938,10 +1928,10 @@ dependencies = [
 [[package]]
 name = "theoria"
 version = "0.1.0"
-source = "git+https://github.com/padamson/theoria?branch=main#b4e0ef0bdd8f867acf7a13067ff5f0ecd10b02b4"
+source = "git+https://github.com/padamson/theoria?branch=main#192adb6a80b001985c4748df6cce8482f3d4c5c0"
 dependencies = [
- "console_error_panic_hook",
  "form_urlencoded",
+ "js-sys",
  "leptos",
  "pulldown-cmark",
  "theoria-macros",
@@ -1951,7 +1941,7 @@ dependencies = [
 [[package]]
 name = "theoria-cli"
 version = "0.1.0"
-source = "git+https://github.com/padamson/theoria?branch=main#b4e0ef0bdd8f867acf7a13067ff5f0ecd10b02b4"
+source = "git+https://github.com/padamson/theoria?branch=main#192adb6a80b001985c4748df6cce8482f3d4c5c0"
 dependencies = [
  "anyhow",
  "clap",
@@ -1962,7 +1952,7 @@ dependencies = [
 [[package]]
 name = "theoria-macros"
 version = "0.1.0"
-source = "git+https://github.com/padamson/theoria?branch=main#b4e0ef0bdd8f867acf7a13067ff5f0ecd10b02b4"
+source = "git+https://github.com/padamson/theoria?branch=main#192adb6a80b001985c4748df6cce8482f3d4c5c0"
 dependencies = [
  "proc-macro2",
  "quote",

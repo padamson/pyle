@@ -49,11 +49,6 @@ criteria = "safe-to-deploy"
 version = "1.0.3"
 criteria = "safe-to-deploy"
 
-[[exemptions.console_error_panic_hook]]
-version = "0.1.7"
-criteria = "safe-to-deploy"
-notes = "Gallery-only: theoria's `csr` mounts it in the theoria app, behind pyle's `stories` feature, so no site's page ships it."
-
 [[exemptions.const-str]]
 version = "1.1.0"
 criteria = "safe-to-deploy"
