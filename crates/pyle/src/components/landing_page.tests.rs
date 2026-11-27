@@ -34,8 +34,8 @@ fn the_sections_sit_inside_the_frame() {
 fn nothing_is_drawn_outside_the_frame() {
     let dom = page("");
     assert_eq!(
-        dom.count("*"),
-        1 + dom.find(".pyle-page").count("*"),
+        (dom.count(":scope > *"), dom.count(":scope > .pyle-page")),
+        (1, 1),
         "{dom}"
     );
 }
@@ -44,7 +44,7 @@ fn nothing_is_drawn_outside_the_frame() {
 fn a_site_s_classes_follow_pyle_s_on_the_frame() {
     let dom = page("antialiased");
     assert_eq!(
-        dom.find(".pyle-page").attr("class"),
+        dom.find(":scope > .pyle-page").attr("class"),
         Some("pyle-page antialiased"),
         "{dom}"
     );

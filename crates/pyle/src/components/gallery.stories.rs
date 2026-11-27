@@ -135,16 +135,16 @@ pub fn stories_for(site: StorySite) -> Stories {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::components::test_support::{ONE_LOOK, stylesheets};
+    use crate::components::test_support::{ONE_LOOK, styles_of, stylesheets};
 
     #[test]
     fn the_page_story_is_styled_by_the_site_s_theme_alone() {
-        let html = leptotes::render(|| {
+        let dom = leptotes::dom(|| {
             sample_page(StorySite {
                 theme: ONE_LOOK,
                 ..StorySite::default()
             })
         });
-        assert_eq!(stylesheets(&html, &ONE_LOOK), (1, 1), "{html}");
+        assert_eq!(stylesheets(&dom), [styles_of(&ONE_LOOK)], "{dom}");
     }
 }

@@ -145,7 +145,7 @@ pub fn PyleStyles(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::components::test_support::{ONE_LOOK, PLAIN, styles_of};
+    use crate::components::test_support::{ONE_LOOK, PLAIN, styles_of, stylesheets};
 
     /// The text between the first `{` and the last `}`: what the outermost
     /// block holds.
@@ -311,24 +311,24 @@ mod tests {
     // written once, when the view is built, would hold the default.
     #[test]
     fn the_stylesheet_is_read_from_the_theme_signal_when_drawn() {
-        let html = leptotes::render(|| {
+        let dom = leptotes::dom(|| {
             let theme = RwSignal::new(Theme::default());
             let view = view! { <PyleStyles theme /> };
             theme.set(ONE_LOOK);
             view
         });
-        assert_eq!(html, styles_of(&ONE_LOOK));
+        assert_eq!(stylesheets(&dom), [styles_of(&ONE_LOOK)], "{dom}");
     }
 
     #[test]
     fn the_styles_component_with_no_theme_carries_the_default_stylesheet() {
-        let html = leptotes::render(|| view! { <PyleStyles /> });
-        assert_eq!(html, styles_of(&Theme::default()));
+        let dom = leptotes::dom(|| view! { <PyleStyles /> });
+        assert_eq!(stylesheets(&dom), [styles_of(&Theme::default())], "{dom}");
     }
 
     #[test]
     fn the_styles_component_carries_the_theme_s_stylesheet() {
-        let html = leptotes::render(|| view! { <PyleStyles theme=ONE_LOOK /> });
-        assert_eq!(html, styles_of(&ONE_LOOK));
+        let dom = leptotes::dom(|| view! { <PyleStyles theme=ONE_LOOK /> });
+        assert_eq!(stylesheets(&dom), [styles_of(&ONE_LOOK)], "{dom}");
     }
 }

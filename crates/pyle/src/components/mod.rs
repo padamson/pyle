@@ -48,21 +48,18 @@ pub(crate) mod test_support {
         font: "serif",
     };
 
-    /// The `<style>` element `PyleStyles` draws for `theme`.
-    pub(crate) fn styles_of(theme: &Theme) -> String {
-        format!(
-            r#"<style id="pyle-styles">{}</style>"#,
-            crate::stylesheet(theme)
-        )
+    /// The `<style>` element `PyleStyles` draws for `theme`, as `stylesheets`
+    /// reads one.
+    pub(crate) fn styles_of(theme: &Theme) -> (Option<&'static str>, String) {
+        (Some("pyle-styles"), crate::stylesheet(theme))
     }
 
-    /// How many `<style>` elements `html` holds, and how many of them are
-    /// `theme`'s.
-    pub(crate) fn stylesheets(html: &str, theme: &Theme) -> (usize, usize) {
-        (
-            leptotes::count(html, "<style"),
-            leptotes::count(html, &styles_of(theme)),
-        )
+    /// Every `<style>` element in `dom`, as its id and its text.
+    pub(crate) fn stylesheets(dom: &Dom) -> Vec<(Option<&str>, String)> {
+        dom.find_all("style")
+            .into_iter()
+            .map(|style| (style.attr("id"), style.text_content()))
+            .collect()
     }
 
     /// Every class an element of `dom` carries that has no rule in pyle's stylesheet. A

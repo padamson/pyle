@@ -139,14 +139,16 @@ pub fn stories() -> Vec<Story> {
 
 #[cfg(test)]
 mod tests {
+    use leptotes::Dom;
+
     use super::*;
-    use crate::components::test_support::{ONE_LOOK, stylesheets};
+    use crate::components::test_support::{ONE_LOOK, styles_of, stylesheets};
 
     /// The playground's page, built for the default theme and then given
     /// `ONE_LOOK` before it is drawn: what it draws with is read from the theme
     /// when drawn, not when built.
-    fn drawn_with_one_look() -> String {
-        leptotes::render(|| {
+    fn drawn_with_one_look() -> Dom {
+        leptotes::dom(|| {
             let theme = RwSignal::new(DEFAULT);
             let view = designing(theme.into());
             theme.set(ONE_LOOK);
@@ -166,20 +168,17 @@ mod tests {
 
     #[test]
     fn the_page_is_styled_by_the_theme_s_stylesheet_alone() {
-        let html = drawn_with_one_look();
-        assert_eq!(stylesheets(&html, &ONE_LOOK), (1, 1), "{html}");
+        let dom = drawn_with_one_look();
+        assert_eq!(stylesheets(&dom), [styles_of(&ONE_LOOK)], "{dom}");
     }
 
     #[test]
     fn the_rust_above_the_page_builds_the_theme_the_page_is_drawn_with() {
-        let html = drawn_with_one_look();
-        let source = html
-            .split_once(r#"id="theme-source""#)
-            .and_then(|(_, rest)| rest.split_once("</pre>"))
-            .map(|(pre, _)| pre);
-        assert!(
-            source.is_some_and(|pre| pre.contains(&format!("{ONE_LOOK:#?}"))),
-            "{html}"
+        let dom = drawn_with_one_look();
+        assert_eq!(
+            dom.find("#theme-source").text_content(),
+            format!("{ONE_LOOK:#?}"),
+            "{dom}"
         );
     }
 }

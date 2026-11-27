@@ -74,7 +74,7 @@ fn a_hero_with_only_a_title_draws_no_tagline_and_no_row() {
 fn a_site_s_classes_follow_pyle_s_on_the_section() {
     let dom = leptotes::dom(|| view! { <Hero title="pyle" class="tall" /> });
     assert_eq!(
-        dom.find("section").attr("class"),
+        dom.find(":scope > section").attr("class"),
         Some("pyle-hero tall"),
         "{dom}"
     );

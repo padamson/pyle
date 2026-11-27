@@ -1369,7 +1369,7 @@ dependencies = [
 [[package]]
 name = "leptotes"
 version = "0.1.0"
-source = "git+https://github.com/padamson/leptotes?branch=main#e248ad719b7665fca2d3d9d55cea41e884ce9596"
+source = "git+https://github.com/padamson/leptotes?branch=main#7250ac1ac05e74dfc9a0b90b906c76d2076d5a40"
 dependencies = [
  "html5ever",
  "leptos",

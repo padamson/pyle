@@ -162,7 +162,7 @@ fn the_newest_release_shows_no_notice() {
 fn a_bar_with_no_classes_from_the_site_has_only_pyle_s() {
     let dom = bar(Snapshot::Dev, None);
     assert_eq!(
-        dom.find(BAR).attr("class"),
+        dom.find(&format!(":scope > {BAR}")).attr("class"),
         Some("pyle-version-bar"),
         "{dom}"
     );
@@ -181,7 +181,7 @@ fn a_site_s_classes_follow_pyle_s_on_the_bar() {
         }
     });
     assert_eq!(
-        dom.find(BAR).attr("class"),
+        dom.find(&format!(":scope > {BAR}")).attr("class"),
         Some("pyle-version-bar sticky top-0"),
         "{dom}"
     );
@@ -208,7 +208,10 @@ fn the_switcher_hands_the_site_s_words_and_classes_to_the_bar() {
         }
     });
     assert_eq!(
-        (dom.find(NOTICE_WORDS).text(), dom.find(BAR).attr("class")),
+        (
+            dom.find(NOTICE_WORDS).text(),
+            dom.find(&format!(":scope > {BAR}")).attr("class")
+        ),
         (
             String::from("APIs may change."),
             Some("pyle-version-bar sticky")
