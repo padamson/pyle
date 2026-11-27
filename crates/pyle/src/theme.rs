@@ -190,6 +190,15 @@ mod tests {
         assert_eq!(leptotes::count(&css, "!important"), 0, "{css}");
     }
 
+    // The component rules are `include_str!`ed, so a checkout that turns
+    // their line endings into CRLF (Git on Windows, by default) changes the
+    // stylesheet; `.gitattributes` keeps `*.css` at LF.
+    #[test]
+    fn the_stylesheet_has_no_carriage_returns() {
+        let css = stylesheet(&Theme::default());
+        assert_eq!(leptotes::count(&css, "\r"), 0, "{css:?}");
+    }
+
     /// What each block of `css` is opened by: every selector, with a list of
     /// them split, and every at-rule.
     fn openers(css: &str) -> Vec<&str> {
