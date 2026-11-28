@@ -175,7 +175,7 @@ jobs:
       # install --locked` (and `--force` after a cache step that restores
       # `~/.cargo/bin`) rather than delete the line.
       - name: Install cargo-nextest
-        uses: taiki-e/install-action@75a7c0f87bd666af3cdb75c5b9e9d03ab6044e6f # v2.90.6
+        uses: taiki-e/install-action@25f51f6b1bf4e18876107cece836f4f77ac17c8c # v2.90.7
         with:
           tool: cargo-nextest
           fallback: none
@@ -215,7 +215,7 @@ jobs:
             crates/pyle-e2e
 
       - name: Install Trunk and cargo-nextest
-        uses: taiki-e/install-action@75a7c0f87bd666af3cdb75c5b9e9d03ab6044e6f # v2.90.6
+        uses: taiki-e/install-action@25f51f6b1bf4e18876107cece836f4f77ac17c8c # v2.90.7
         with:
           tool: trunk,cargo-nextest
           fallback: none
