@@ -1037,7 +1037,7 @@ dependencies = [
 [[package]]
 name = "leptotes"
 version = "0.1.0"
-source = "git+https://github.com/padamson/leptotes?branch=main#7250ac1ac05e74dfc9a0b90b906c76d2076d5a40"
+source = "git+https://github.com/padamson/leptotes?branch=main#f489a7f844b95e010a5904d5b862386e313340a6"
 dependencies = [
  "html5ever",
  "leptos",
@@ -1928,7 +1928,7 @@ dependencies = [
 [[package]]
 name = "theoria"
 version = "0.1.0"
-source = "git+https://github.com/padamson/theoria?branch=main#192adb6a80b001985c4748df6cce8482f3d4c5c0"
+source = "git+https://github.com/padamson/theoria?branch=main#c332b3aeb2bb3f7b2c2c076b5c68ea1d8fc5724d"
 dependencies = [
  "form_urlencoded",
  "js-sys",
@@ -1941,7 +1941,7 @@ dependencies = [
 [[package]]
 name = "theoria-cli"
 version = "0.1.0"
-source = "git+https://github.com/padamson/theoria?branch=main#192adb6a80b001985c4748df6cce8482f3d4c5c0"
+source = "git+https://github.com/padamson/theoria?branch=main#c332b3aeb2bb3f7b2c2c076b5c68ea1d8fc5724d"
 dependencies = [
  "anyhow",
  "clap",
@@ -1952,7 +1952,7 @@ dependencies = [
 [[package]]
 name = "theoria-macros"
 version = "0.1.0"
-source = "git+https://github.com/padamson/theoria?branch=main#192adb6a80b001985c4748df6cce8482f3d4c5c0"
+source = "git+https://github.com/padamson/theoria?branch=main#c332b3aeb2bb3f7b2c2c076b5c68ea1d8fc5724d"
 dependencies = [
  "proc-macro2",
  "quote",
